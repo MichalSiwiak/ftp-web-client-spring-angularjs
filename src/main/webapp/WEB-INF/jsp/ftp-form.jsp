@@ -114,7 +114,7 @@
             </thead>
             <tbody class="text-center">
             <tr ng-repeat="file in files">
-                <td>{{ file.name }}</td>
+                <td><a href="" ng-click="submitFileName( file.name )">{{ file.name }}</a></td>
                 <td>{{ file.size }}</td>
             </tr>
             </tbody>

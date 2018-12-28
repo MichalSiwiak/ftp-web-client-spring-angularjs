@@ -23,6 +23,17 @@ app.controller("FtpManagementController", function ($scope, $http) {
         });
     }
 
+    $scope.submitFileName = function ( fileName ) {
+        $http({
+            method: "POST",
+            url: '/ftp/demo/files',
+            data: fileName,
+            headers: {
+                'Content-Type': 'text/plain'
+            }
+        }).then(_success, _error);
+    };
+
     function _success() {
         _refreshPageData();
         _clearForm()
