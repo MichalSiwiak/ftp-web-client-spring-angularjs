@@ -124,7 +124,7 @@
                     <td>
                         <c:choose>
                             <c:when test="${file.type=='1'}">
-<<<<<<< HEAD
+
                                 <form action="${pageContext.request.contextPath}/directory" method="post">
                                     <button name="name" value="${file.name}" type="submit" formmethod="post">${file.name}</button>
                                 </form>
@@ -133,18 +133,6 @@
                                 <form action="${pageContext.request.contextPath}/file" method="post">
                                     <button name="name" value="${file.name}" type="submit" formmethod="post">${file.name}</button>
                                 </form>
-=======
-                                <c:url var="url" scope="page" value="${pageContext.request.contextPath}/directory">
-                                    <c:param name="name" value="${file.name}">
-                                    </c:param>
-                                </c:url> <a href="${url}">${file.name}</a>
-                            </c:when>
-                            <c:otherwise>
-                                <c:url var="url" scope="page" value="${pageContext.request.contextPath}/file">
-                                    <c:param name="name" value="${file.name}">
-                                    </c:param>
-                                </c:url> <a href="${url}">${file.name}</a>
->>>>>>> 7ac991745ad40f0161da123c6b9d6e03fffd7398
                             </c:otherwise>
                         </c:choose>
                     </td>

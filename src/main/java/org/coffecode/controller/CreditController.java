@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.*;
 import org.apache.commons.net.ftp.FTPClient;
 
 import javax.annotation.PostConstruct;
-<<<<<<< HEAD
+
 import java.io.*;
-=======
+
 import java.io.IOException;
->>>>>>> 7ac991745ad40f0161da123c6b9d6e03fffd7398
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -54,7 +54,7 @@ public class CreditController {
             System.out.println("File #1 has been downloaded successfully.");
         }
 
-<<<<<<< HEAD
+
         outputStream1.close();
 
         Thread.sleep(30000);
@@ -72,26 +72,16 @@ public class CreditController {
 
     }
 
-=======
-        ftpClient.changeWorkingDirectory("coffeecode.cba.pl");
-    }
 
 
-    @GetMapping("/file")
-    public String file(@RequestParam("name") String name) {
-        System.out.println(name);
-        return "ftp-form";
 
-    }
 
-    @GetMapping("/directory")
-    public String directory(@RequestParam("name") String name) {
-        System.out.println(name);
-        return "ftp-form";
 
-    }
 
->>>>>>> 7ac991745ad40f0161da123c6b9d6e03fffd7398
+
+
+
+
     @GetMapping("/demo")
     public String getAllFiles(Model model) throws IOException {
         List<FTPFile> ftpFiles = Arrays.asList(ftpClient.listFiles());
