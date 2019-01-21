@@ -108,15 +108,41 @@
         <table class="table table-striped">
             <thead class="thead-light">
             <tr class="text-center">
+                <th>id</th>
+                <th>checked</th>
                 <th>name</th>
+                <th>type</th>
                 <th>size</th>
+
             </tr>
             </thead>
             <tbody class="text-center">
-            <tr ng-repeat="file in files">
-                <td>{{ file.name }}</td>
-                <td>{{ file.size }}</td>
-            </tr>
+            <c:forEach var="file" items="${files}">
+                <tr>
+                    <td>${file.id}</td>
+                    <td>${file.checked}</td>
+                    <td>
+                        <c:choose>
+                            <c:when test="${file.type=='1'}">
+                                <c:url var="url" scope="page" value="${pageContext.request.contextPath}/directory">
+                                    <c:param name="name" value="${file.name}">
+                                    </c:param>
+                                </c:url> <a href="${url}">${file.name}</a>
+                            </c:when>
+                            <c:otherwise>
+                                <c:url var="url" scope="page" value="${pageContext.request.contextPath}/file">
+                                    <c:param name="name" value="${file.name}">
+                                    </c:param>
+                                </c:url> <a href="${url}">${file.name}</a>
+                            </c:otherwise>
+                        </c:choose>
+                    </td>
+                    <td>${file.type}</td>
+                    <td>${file.size}</td>
+
+
+                </tr>
+            </c:forEach>
             </tbody>
         </table>
 
