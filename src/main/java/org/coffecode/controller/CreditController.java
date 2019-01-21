@@ -56,12 +56,10 @@ public class CreditController {
             System.out.println("File #1 has been downloaded successfully.");
         }
 
-
         outputStream1.close();
-
         Thread.sleep(30000);
-
-
+        downloadFile1.delete();
+        System.out.println("cokolwiek");
         return "redirect:/demo";
 
     }
