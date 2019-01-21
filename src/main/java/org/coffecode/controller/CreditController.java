@@ -3,6 +3,8 @@ package org.coffecode.controller;
 import org.apache.commons.net.ftp.FTPFile;
 import org.coffecode.model.FTPFileClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -62,6 +64,22 @@ public class CreditController {
 
         return "redirect:/demo";
 
+    }
+
+
+    @GetMapping("/downloadpdf")
+    public ResponseEntity<InputStreamResource> downloadPDF() {
+        File file = new File("C:\\Users\\msiwiak\\Desktop\\timetable.pdf");
+        InputStreamResource resource = null;
+        try {
+            resource = new InputStreamResource(new FileInputStream(file));
+        } catch (FileNotFoundException e) {
+        }
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment;filename=" + file.getName())
+                .contentType(MediaType.APPLICATION_PDF).contentLength(file.length())
+                .body(resource);
     }
 
     @PostMapping("/directory")
