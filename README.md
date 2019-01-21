@@ -1,1 +1,0 @@
-# credit-timetable-spring
