@@ -124,16 +124,14 @@
                     <td>
                         <c:choose>
                             <c:when test="${file.type=='1'}">
-                                <c:url var="url" scope="page" value="${pageContext.request.contextPath}/directory">
-                                    <c:param name="name" value="${file.name}">
-                                    </c:param>
-                                </c:url> <a href="${url}">${file.name}</a>
+                                <form action="${pageContext.request.contextPath}/directory" method="post">
+                                    <button name="name" value="${file.name}" type="submit" formmethod="post">${file.name}</button>
+                                </form>
                             </c:when>
                             <c:otherwise>
-                                <c:url var="url" scope="page" value="${pageContext.request.contextPath}/file">
-                                    <c:param name="name" value="${file.name}">
-                                    </c:param>
-                                </c:url> <a href="${url}">${file.name}</a>
+                                <form action="${pageContext.request.contextPath}/file" method="post">
+                                    <button name="name" value="${file.name}" type="submit" formmethod="post">${file.name}</button>
+                                </form>
                             </c:otherwise>
                         </c:choose>
                     </td>
