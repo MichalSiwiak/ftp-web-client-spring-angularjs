@@ -1,4 +1,4 @@
-package org.coffecode.config;
+package net.coffeecoding.config;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 
 @Configuration
 @PropertySource({"classpath:ftp.properties"})
-public class FtpConfig implements WebMvcConfigurer {
+public class FtpClientConfig implements WebMvcConfigurer {
 
     @Autowired
     private Environment env;
@@ -26,7 +26,6 @@ public class FtpConfig implements WebMvcConfigurer {
         FTPClient ftpClient = new FTPClient();
 
         try{
-
             logger.info("ftp.server=" + env.getProperty("ftp.server"));
             logger.info("ftp.port=" + env.getProperty("ftp.port"));
             ftpClient.connect(env.getProperty("ftp.server"), Integer.parseInt(env.getProperty("ftp.port")));

@@ -117,6 +117,17 @@
             </tr>
             </thead>
             <tbody class="text-center">
+            <tr>
+                <td></td>
+                <td></td>
+                <td>
+                    <form action="${pageContext.request.contextPath}/back" method="get">
+                        <button type="submit">Back</button>
+                    </form>
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
             <c:forEach var="file" items="${files}">
                 <tr>
                     <td>${file.id}</td>
@@ -126,20 +137,20 @@
                             <c:when test="${file.type=='1'}">
 
                                 <form action="${pageContext.request.contextPath}/directory" method="post">
-                                    <button name="name" value="${file.name}" type="submit" formmethod="post">${file.name}</button>
+                                    <button name="name" value="${file.name}" type="submit"
+                                            formmethod="post">${file.name}</button>
                                 </form>
                             </c:when>
                             <c:otherwise>
                                 <form action="${pageContext.request.contextPath}/file" method="post">
-                                    <button name="name" value="${file.name}" type="submit" formmethod="post">${file.name}</button>
+                                    <button name="name" value="${file.name}" type="submit"
+                                            formmethod="post">${file.name}</button>
                                 </form>
                             </c:otherwise>
                         </c:choose>
                     </td>
                     <td>${file.type}</td>
                     <td>${file.size}</td>
-
-
                 </tr>
             </c:forEach>
             </tbody>
@@ -148,9 +159,7 @@
     </div>
 </div>
 <div class="row my-4">
-    <div class="container p-0">
-
-    </div>
+    <div class="container p-0"></div>
 </div>
 <footer class="py-5 bg-dark text-muted">
     <div class="container">

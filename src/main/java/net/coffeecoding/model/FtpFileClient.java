@@ -1,8 +1,8 @@
-package org.coffecode.model;
+package net.coffeecoding.model;
 
 import java.util.Calendar;
 
-public class FTPFileClient {
+public class FtpFileClient {
 
     private int id;
     private boolean checked;
@@ -11,7 +11,7 @@ public class FTPFileClient {
     private long size;
     private Calendar modificationDate;
 
-    public FTPFileClient(int id, boolean checked, String name, int type, long size, Calendar modificationDate) {
+    public FtpFileClient(int id, boolean checked, String name, int type, long size, Calendar modificationDate) {
         this.id = id;
         this.checked = checked;
         this.name = name;
