@@ -20,6 +20,10 @@ public class FtpFileClient {
         this.modificationDate = modificationDate;
     }
 
+    public FtpFileClient() {
+
+    }
+
     public int getId() {
         return id;
     }

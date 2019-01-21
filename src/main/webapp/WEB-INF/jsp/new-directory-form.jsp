@@ -104,109 +104,47 @@
 </div>
 
 
-<div class="pt-5 pb-0">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-2">
-                <form action="${pageContext.request.contextPath}/new-directory">
-                    <button
-                            class="btn w-100 btn-success" type="submit">New
-                        directory
-                    </button>
-                </form>
-            </div>
-            <div class="col-md-2">
-                <form action="${pageContext.request.contextPath}/new-file">
-                    <button class="btn w-100 btn-success" type="submit">New file</button>
-                </form>
-            </div>
-            <div class="col-md-2">
-                <form action="${pageContext.request.contextPath}/send-file">
-                    <button class="btn w-100 btn-info" type="submit">Send file</button>
-                </form>
-            </div>
-            <div class="col-md-2">
-                <form action="${pageContext.request.contextPath}/new-directory">
-                    <button class="btn w-100 btn-danger" type="submit">Delete</button>
-                </form>
-            </div>
-            <div class="col-md-2">
-                <form action="${pageContext.request.contextPath}/new-directory">
-                    <button class="btn w-100 btn-secondary" type="submit">Change name</button>
-                </form>
-            </div>
-            <div class="col-md-2">
-                <form action="${pageContext.request.contextPath}/new-directory">
-                    <button class="btn w-100 btn-secondary" type="submit">Unzip</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<div class="py-5 border-0">
-    <div class="container" style="min-height: 1000px">
-        <div class="row">
-            <h2 class="w-100 text-left">Web based FTP client</h2>
-            <table class="table table-striped">
-                <thead class="thead-light">
-                <tr class="text-center">
-                    <th>Select</th>
-                    <th>Name</th>
-                    <th>Action</th>
-                    <th>Type</th>
-                    <th>Size</th>
-
-                </tr>
-                </thead>
-                <tbody class="text-center">
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td>
-                        <form action="${pageContext.request.contextPath}/back" method="get">
-                            <button type="submit" class="btn btn-dark w-50">
-                                <i class="fa fa-arrow-left" aria-hidden="true"></i>&nbsp;Back
+<div class="container">
+    <div class="row">
+        <div class="order-md-1 w-25 col-md-12" style="">
+            <h2 class="w-100 text-left mb-5 mt-5">Creating new directory ...</h2>
+            <form id="c_form-h" class="">
+                <div class="form-group row"><label for="inputmailh" class="col-2 col-form-label">Name of new
+                    catalog:</label>
+                    <div class="col-10  mb-4">
+                        <input type="email" class="form-control w-25" id="inputmailh" placeholder="mail@example.com">
+                    </div>
+                </div>
+                <a class="btn btn-secondary" href="${pageContext.request.contextPath}/demo">Back</a>
+                <a class="btn btn-secondary ml-3" href="${pageContext.request.contextPath}/demo">Approve</a>
+                <div class="col mb-2 px-0">
+                    <div class="alert alert-success text-white px-5 mt-5 mb-0" role="alert">
+                        <div class="container">
+                            <i class="now-ui-icons ui-2_like lg pull-left mr-3"></i>
+                            <strong>WELL DONE!</strong>
+                            <span> You successfully read this important alert message. </span>
+                            <button type="button" class="close text-white" data-dismiss="alert">
+                                <i class="now-ui-icons ui-1_simple-remove"></i>
                             </button>
-                        </form>
-                    </td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <c:forEach var="file" items="${files}">
-                    <tr>
-                        <td><input type="checkbox" value="on" checked=""></td>
-                        <td>${file.name}</td>
-                        <td>
-                            <c:choose>
-                                <c:when test="${file.type=='1'}">
-                                    <form action="${pageContext.request.contextPath}/directory" method="post">
-                                        <button name="name" value="${file.name}" type="submit" formmethod="post"
-                                                class="btn btn-dark w-50">
-                                            <i class="fa fa-sign-in" aria-hidden="true"></i>&nbsp;Open
-                                        </button>
-                                    </form>
-                                </c:when>
-                                <c:otherwise>
-                                    <form action="${pageContext.request.contextPath}/file" method="post">
-                                        <button name="name" value="${file.name}" type="submit"
-                                                formmethod="post" class="btn btn-dark w-50">
-                                            <i class="fa fa-download" aria-hidden="true"></i>&nbsp;Download
-                                        </button>
-                                    </form>
-                                </c:otherwise>
-                            </c:choose>
-                        </td>
-                        <td>${file.type}</td>
-                        <td>${file.size}</td>
-                    </tr>
-                </c:forEach>
-                </tbody>
-            </table>
+                        </div>
+                    </div>
+                    <div class="alert alert-danger text-white px-5" role="alert">
+                        <div class="container">
+                            <i class="now-ui-icons objects_support-17 lg pull-left mr-3"></i>
+                            <strong>OH SNAP!</strong>
+                            <span> Change a few things up and try submitting again. </span>
+                            <button type="button" class="close text-white" data-dismiss="alert">
+                                <i class="now-ui-icons ui-1_simple-remove"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
+
+
 <footer class="py-5 bg-dark text-muted">
     <div class="container">
         <p class="float-right">

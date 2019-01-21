@@ -91,7 +91,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-0">
-                <h1 class="text-left text-primary">FTP</h1>
+                <h1 class="text-left text-primary">FTP CLIENT</h1>
                 <p class="lead text-left">Lorem Ipsum jest tekstem stosowanym jako przykładowy wypełniacz w przemyśle
                     poligraficznym. Został po raz pierwszy użyty w XV w. przez nieznanego drukarza do wypełnienia
                     tekstem próbnej książki. Pięć wieków później zaczął być używany przemyśle elektronicznym, pozostając
@@ -101,50 +101,10 @@
     </div>
 </div>
 <div class="row py-4">
-    <div class="container">
+    <div class="container" style="min-height: 1000px">
         <h2 class="text-center">Project Description</h2>
-        </br>
-        </br>
-        </br>
-        </br>
-        </br>
-        </br>
-        </br>
-        </br>
-        </br>
-        </br>
-        </br>
-        </br>
-        </br>
-        </br>
-        </br>
-        </br>
-        </br>
-        </br>
-        </br>
-        </br>
-        </br>
-        </br>
-        </br>
-        </br>
-        </br>
-        </br>
-        </br>
-        </br>
-        </br>
-        </br>
-        </br>
-        </br>
-        </br>
-        </br>
-        </br>
-        </br>
-        </br>
-        </br>
-        </br>
-        </br>
-        </br>
-        </br>
+
+
     </div>
 </div>
 <footer class="py-5 bg-dark text-muted">

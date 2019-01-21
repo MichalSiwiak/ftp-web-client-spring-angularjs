@@ -102,111 +102,82 @@
         </div>
     </div>
 </div>
-
-
-<div class="pt-5 pb-0">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-2">
-                <form action="${pageContext.request.contextPath}/new-directory">
-                    <button
-                            class="btn w-100 btn-success" type="submit">New
-                        directory
-                    </button>
-                </form>
-            </div>
-            <div class="col-md-2">
-                <form action="${pageContext.request.contextPath}/new-file">
-                    <button class="btn w-100 btn-success" type="submit">New file</button>
-                </form>
-            </div>
-            <div class="col-md-2">
-                <form action="${pageContext.request.contextPath}/send-file">
-                    <button class="btn w-100 btn-info" type="submit">Send file</button>
-                </form>
-            </div>
-            <div class="col-md-2">
-                <form action="${pageContext.request.contextPath}/new-directory">
-                    <button class="btn w-100 btn-danger" type="submit">Delete</button>
-                </form>
-            </div>
-            <div class="col-md-2">
-                <form action="${pageContext.request.contextPath}/new-directory">
-                    <button class="btn w-100 btn-secondary" type="submit">Change name</button>
-                </form>
-            </div>
-            <div class="col-md-2">
-                <form action="${pageContext.request.contextPath}/new-directory">
-                    <button class="btn w-100 btn-secondary" type="submit">Unzip</button>
-                </form>
+<div class="container">
+    <div class="row my-4">
+        <div class="mx-auto col-md-6 col-10 col-xl-4 px-4">
+            <div class="card bg-primary rounded">
+                <div class="card-body text-center rounded bg-dark">
+                    <div class="row mt-5">
+                        <div class="col-md-12">
+                            <h5 class="mb-4"><b>FTP WEB CLIENT</b></h5>
+                        </div>
+                        <c:if test="${param.error != null}">
+                            <div class="alert alert-danger col-xs-offset-1 col-xs-10 w-100 text-light"> Invalid
+                                username/password.
+                            </div>
+                        </c:if>
+                    </div>
+                    <div class="row pt-2 mt-0">
+                        <div class="col bg-dark">
+                            <form:form action="${pageContext.request.contextPath}/authenticateTheUser"
+                                       method="POST" autocomplete="off">
+                                <div class="form-group mb-2">
+                                    <div class="input-group border-0">
+                                        <div class="input-group-prepend">
+                          <span class="input-group-text">
+                        <i class="fa fa-server text-light" aria-hidden="true"></i>
+                          </span>
+                                        </div>
+                                        <input type="text" name="username" class="form-control text-center"
+                                               placeholder="server">
+                                    </div>
+                                </div>
+                                <div class="form-group mb-2">
+                                    <div class="input-group border-0">
+                                        <div class="input-group-prepend">
+                          <span class="input-group-text">
+                        <i class="fa fa-plug text-light" aria-hidden="true"></i>
+                          </span>
+                                        </div>
+                                        <input type="text" name="username" class="form-control text-center"
+                                               placeholder="port number">
+                                    </div>
+                                </div>
+                                <div class="form-group mb-2">
+                                    <div class="input-group border-0">
+                                        <div class="input-group-prepend">
+                          <span class="input-group-text">
+                           <i class="fa fa-user fa-lg text-light" aria-hidden="true"></i>
+                          </span>
+                                        </div>
+                                        <input type="text" name="username" class="form-control text-center"
+                                               placeholder="username">
+                                    </div>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <div class="input-group border-0">
+                                        <div class="input-group-prepend ">
+                          <span class="input-group-text">
+                            <i class="fa fa-lock fa-lg text-light" aria-hidden="true"></i>
+                          </span>
+                                        </div>
+                                        <input type="password" name="password" class="form-control text-center"
+                                               placeholder="password">
+                                    </div>
+                                </div>
+                                <button type="submit"
+                                        class="btn mt-4 mb-3 rounded btn-lg btn-primary text-light w-100">Login
+                                </button>
+                            </form:form>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
-
-<div class="py-5 border-0">
-    <div class="container" style="min-height: 1000px">
-        <div class="row">
-            <h2 class="w-100 text-left">Web based FTP client</h2>
-            <table class="table table-striped">
-                <thead class="thead-light">
-                <tr class="text-center">
-                    <th>Select</th>
-                    <th>Name</th>
-                    <th>Action</th>
-                    <th>Type</th>
-                    <th>Size</th>
-
-                </tr>
-                </thead>
-                <tbody class="text-center">
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td>
-                        <form action="${pageContext.request.contextPath}/back" method="get">
-                            <button type="submit" class="btn btn-dark w-50">
-                                <i class="fa fa-arrow-left" aria-hidden="true"></i>&nbsp;Back
-                            </button>
-                        </form>
-                    </td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <c:forEach var="file" items="${files}">
-                    <tr>
-                        <td><input type="checkbox" value="on" checked=""></td>
-                        <td>${file.name}</td>
-                        <td>
-                            <c:choose>
-                                <c:when test="${file.type=='1'}">
-                                    <form action="${pageContext.request.contextPath}/directory" method="post">
-                                        <button name="name" value="${file.name}" type="submit" formmethod="post"
-                                                class="btn btn-dark w-50">
-                                            <i class="fa fa-sign-in" aria-hidden="true"></i>&nbsp;Open
-                                        </button>
-                                    </form>
-                                </c:when>
-                                <c:otherwise>
-                                    <form action="${pageContext.request.contextPath}/file" method="post">
-                                        <button name="name" value="${file.name}" type="submit"
-                                                formmethod="post" class="btn btn-dark w-50">
-                                            <i class="fa fa-download" aria-hidden="true"></i>&nbsp;Download
-                                        </button>
-                                    </form>
-                                </c:otherwise>
-                            </c:choose>
-                        </td>
-                        <td>${file.type}</td>
-                        <td>${file.size}</td>
-                    </tr>
-                </c:forEach>
-                </tbody>
-            </table>
-        </div>
-    </div>
 </div>
+
 <footer class="py-5 bg-dark text-muted">
     <div class="container">
         <p class="float-right">

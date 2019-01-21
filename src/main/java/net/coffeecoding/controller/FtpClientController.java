@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.apache.commons.net.ftp.FTPClient;
+
 import javax.annotation.PostConstruct;
 import java.io.*;
 import java.io.IOException;
@@ -50,7 +51,7 @@ public class FtpClientController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        downloadFile.delete();
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION,
                         "attachment;filename=" + fileName)
@@ -84,6 +85,49 @@ public class FtpClientController {
         }
         model.addAttribute("files", ftpFileClients);
         return "ftp-form";
+    }
+
+    @GetMapping("/new-file")
+    public String newFileGET(Model model) throws IOException {
+        FtpFileClient ftpFileClient = new FtpFileClient();
+        model.addAttribute("file", ftpFileClient);
+        return "new-file-form";
+    }
+
+    @PostMapping("/new-file")
+    public String newFilePOST(@ModelAttribute FtpFileClient ftpFileClient) throws IOException {
+
+        return "new-file-form";
+    }
+
+    @GetMapping("/new-directory")
+    public String newDirectoryGET(Model model) throws IOException {
+
+        return "new-directory-form";
+    }
+
+    @PostMapping("/new-directory")
+    public String newDirectoryPOST(Model model) throws IOException {
+
+        return "new-directory-form";
+    }
+
+    @GetMapping("/send-file")
+    public String sendFileGET(Model model) throws IOException {
+
+        return "send-file-form";
+    }
+
+    @PostMapping("/send-file")
+    public String sendFilePOST(Model model) throws IOException {
+
+        return "send-file-form";
+    }
+
+    @GetMapping("/cokolwiek")
+    public String login(Model model) throws IOException {
+
+        return "ftp-form-login";
     }
 
 
