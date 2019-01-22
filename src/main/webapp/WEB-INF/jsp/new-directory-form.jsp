@@ -104,6 +104,23 @@
 </div>
 
 
+<nav class="navbar navbar-expand-md navbar-dark mb-4 bg-info" >
+    <div class="container">
+        <a class="navbar-brand" href="#">SERVER: ${serverName}</a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarPrimaryContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse text-center justify-content-end" id="navbarPrimaryContent">
+            <ul class="navbar-nav">
+                <li class="nav-item mx-1">
+                    <a class="nav-link active align-items-center d-flex" href="${pageContext.request.contextPath}/logout">
+                        <i class="fa fa-sign-out fa-2x" aria-hidden="true"></i> &nbsp; LOGOUT</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
 <div class="container">
     <div class="row">
         <div class="order-md-1 w-25 col-md-12" style="">

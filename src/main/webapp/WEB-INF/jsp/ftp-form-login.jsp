@@ -114,11 +114,14 @@
                         <c:if test="${error != null}">
                             <div class="alert alert-danger col-xs-offset-1 col-xs-10 w-100 text-light"> ${error} </div>
                         </c:if>
+                        <c:if test="${logout != null}">
+                            <div class="alert alert-info col-xs-offset-1 col-xs-10 w-100 text-light"> ${logout} </div>
+                        </c:if>
                     </div>
                     <div class="row pt-2 mt-0">
                         <div class="col bg-dark">
-                            <form:form modelAttribute="server" action="${pageContext.request.contextPath}/authenticate"
-                                       method="POST" autocomplete="off">
+                            <form action="${pageContext.request.contextPath}/authenticate" method="POST"
+                                  autocomplete="off">
                                 <div class="form-group mb-2">
                                     <div class="input-group border-0">
                                         <div class="input-group-prepend">
@@ -126,9 +129,9 @@
                         <i class="fa fa-server text-light" aria-hidden="true"></i>
                           </span>
                                         </div>
-                                        <form:input path="serverName" type="text"
-                                                    class="form-control text-center"
-                                                    placeholder="Server Name"/>
+                                        <input name="serverName" type="text"
+                                               class="form-control text-center"
+                                               placeholder="server name"/>
                                     </div>
                                 </div>
                                 <div class="form-group mb-2">
@@ -138,9 +141,9 @@
                         <i class="fa fa-plug text-light" aria-hidden="true"></i>
                           </span>
                                         </div>
-                                        <form:input path="portNumber" type="number" value="21"
-                                                    class="form-control text-center"
-                                                    placeholder="port number"/>
+                                        <input name="portNumber" type="number" value="21"
+                                               class="form-control text-center"
+                                               placeholder="port number"/>
                                     </div>
                                 </div>
                                 <div class="form-group mb-2">
@@ -150,9 +153,9 @@
                            <i class="fa fa-user fa-lg text-light" aria-hidden="true"></i>
                           </span>
                                         </div>
-                                        <form:input path="username" type="text"
-                                                    class="form-control text-center"
-                                                    placeholder="username dd"/>
+                                        <input name="username" type="text"
+                                               class="form-control text-center"
+                                               placeholder="username"/>
                                     </div>
                                 </div>
                                 <div class="form-group mb-3">
@@ -162,15 +165,15 @@
                             <i class="fa fa-lock fa-lg text-light" aria-hidden="true"></i>
                           </span>
                                         </div>
-                                        <form:input path="password" type="password"
-                                                    class="form-control text-center"
-                                                    placeholder="passwordd "/>
+                                        <input name="password" type="password"
+                                               class="form-control text-center"
+                                               placeholder="password"/>
                                     </div>
                                 </div>
                                 <button type="submit"
                                         class="btn mt-4 mb-3 rounded btn-lg btn-primary text-light w-100">Login
                                 </button>
-                            </form:form>
+                            </form>
                         </div>
                     </div>
                 </div>

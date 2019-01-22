@@ -27,6 +27,7 @@ public class FtpClientController {
 
     @Autowired
     private FTPClient ftpClient;
+    private String serverName;
 
 
     @PostConstruct
@@ -86,6 +87,7 @@ public class FtpClientController {
                     new FtpFileClient(id, false, ftpFile.getName(), ftpFile.getType(), ftpFile.getSize(), ftpFile.getTimestamp()));
         }
         model.addAttribute("files", ftpFileClients);
+        model.addAttribute("serverName", serverName);
         return "ftp-form";
     }
 
@@ -128,34 +130,44 @@ public class FtpClientController {
 
     @GetMapping("/login")
     public String loginGET(Model model) throws IOException {
-        FtpServerData ftpServerData = new FtpServerData();
-        model.addAttribute("server", ftpServerData);
+        return "ftp-form-login";
+    }
+
+    @GetMapping("/logout")
+    public String logout( Model model) throws IOException {
+        ftpClient.logout();
+        ftpClient.disconnect();
+        model.addAttribute("logout", "You have been logged out.");
         return "ftp-form-login";
     }
 
     @PostMapping("/authenticate")
-    public String loginPOST(@ModelAttribute FtpServerData server, Model model) {
+    public String loginPOST(@RequestParam("serverName") String serverName,
+                            @RequestParam("portNumber") String portNumber,
+                            @RequestParam("username") String username,
+                            @RequestParam("password") String password,
+                            Model model) {
 
         FTPClient ftpClient = new FTPClient();
         boolean login = false;
 
         try {
-            ftpClient.connect(server.getServerName(), server.getPortNumber());
-            login = ftpClient.login(server.getUsername(), server.getPassword());
+            ftpClient.connect(serverName, Integer.parseInt(portNumber));
+            login = ftpClient.login(username, password);
             ftpClient.enterLocalPassiveMode();
             ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
-        } catch (Exception e) {
+            this.serverName = serverName;
+        } catch (IOException e) {
             e.printStackTrace();
-            model.addAttribute("error", "Unable to connect to the server - check the data entered!");
-            System.out.println("Dupa");
+            model.addAttribute("error", "Unable to connect to the server - unknown host!");
             return "ftp-form-login";
         }
 
         if (login != false) {
             this.ftpClient = ftpClient;
-            return "ftp-form-login";
+            return "redirect:/demo";
         } else {
-            model.addAttribute("error", "Unable to connect to the server - check the data entered!");
+            model.addAttribute("error", "Unable to connect to the server - invalid username or password!");
             return "ftp-form-login";
         }
 

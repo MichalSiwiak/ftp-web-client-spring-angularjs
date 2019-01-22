@@ -104,15 +104,30 @@
 </div>
 
 
+<nav class="navbar navbar-expand-md navbar-dark mb-4 bg-info" >
+    <div class="container">
+        <a class="navbar-brand" href="#">SERVER: ${serverName}</a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarPrimaryContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse text-center justify-content-end" id="navbarPrimaryContent">
+            <ul class="navbar-nav">
+                <li class="nav-item mx-1">
+                    <a class="nav-link active align-items-center d-flex" href="${pageContext.request.contextPath}/logout">
+                        <i class="fa fa-sign-out fa-2x" aria-hidden="true"></i> &nbsp; LOGOUT</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
 <div class="pt-5 pb-0">
     <div class="container">
         <div class="row">
             <div class="col-md-2">
                 <form action="${pageContext.request.contextPath}/new-directory">
-                    <button
-                            class="btn w-100 btn-success" type="submit">New
-                        directory
-                    </button>
+                    <button class="btn w-100 btn-success" type="submit">New directory </button>
                 </form>
             </div>
             <div class="col-md-2">
