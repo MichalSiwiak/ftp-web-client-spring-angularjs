@@ -104,16 +104,18 @@
 </div>
 
 
-<nav class="navbar navbar-expand-md navbar-dark mb-4 bg-info" >
+<nav class="navbar navbar-expand-md navbar-dark mb-4 bg-info">
     <div class="container">
         <a class="navbar-brand" href="#">SERVER: ${serverName}</a>
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarPrimaryContent">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+                data-target="#navbarPrimaryContent">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse text-center justify-content-end" id="navbarPrimaryContent">
             <ul class="navbar-nav">
                 <li class="nav-item mx-1">
-                    <a class="nav-link active align-items-center d-flex" href="${pageContext.request.contextPath}/logout">
+                    <a class="nav-link active align-items-center d-flex"
+                       href="${pageContext.request.contextPath}/logout">
                         <i class="fa fa-sign-out fa-2x" aria-hidden="true"></i> &nbsp; LOGOUT</a>
                 </li>
             </ul>
@@ -132,8 +134,9 @@
                         <input type="email" class="form-control w-25" id="inputmailh" placeholder="mail@example.com">
                     </div>
                 </div>
-                <a class="btn btn-secondary" href="${pageContext.request.contextPath}/demo">Back</a>
-                <a class="btn btn-secondary ml-3" href="${pageContext.request.contextPath}/demo">Approve</a>
+                <a class="btn btn-secondary " style="height:40px; width:100px"
+                   href="${pageContext.request.contextPath}/demo">Back</a>
+                <input class="btn btn-secondary ml-3" type="submit" value="Approve" style="height:40px; width:100px">
                 <div class="col mb-2 px-0">
                     <div class="alert alert-success text-white px-5 mt-5 mb-0" role="alert">
                         <div class="container">

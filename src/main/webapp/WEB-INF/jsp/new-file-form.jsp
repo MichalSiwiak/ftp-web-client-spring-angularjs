@@ -3,6 +3,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="input" uri="http://www.springframework.org/tags/form" %>
 <html>
 
 <head>
@@ -126,21 +127,21 @@
     <div class="row">
         <div class="order-md-1 w-25 col-md-12" style="">
             <h2 class="w-100 text-left mb-5 mt-5">Creating new file ...</h2>
-            <form id="c_form-h" class="">
-                <div class="form-group row"><label for="inputpasswordh" class="col-2 col-form-label">Name of new
+            <form:form modelAttribute="ftpFileClient" id="c_form-h" class="">
+                <div class="form-group row"><label class="col-2 col-form-label">Name of new
                     file:</label>
                     <div class="col-10">
-                        <input type="password" class="form-control w-25" id="inputpasswordh" placeholder="Password">
+                        <form:input path="name" type="text" class="form-control w-25" placeholder="Password"/>
                     </div>
                 </div>
-                <div class="form-group row "><label for="inputpasswordh" class="col-2 col-form-label">File
+                <div class="form-group row "><label class="col-2 col-form-label">File
                     content:</label>
                     <div class="col-10  mb-4">
                         <textarea class="form-control w-100"
                                   style="margin-top: 0px; margin-bottom: 0px; height: 200px;"></textarea></div>
                 </div>
-                <a class="btn btn-secondary" href="${pageContext.request.contextPath}/demo">Back</a>
-                <a class="btn btn-secondary ml-3" href="${pageContext.request.contextPath}/demo">Approve</a>
+                <input class="btn btn-secondary" type="submit" value="<- Back" style="height:40px; width:100px" >
+                <input class="btn btn-secondary" type="submit" value="Approve" style="height:40px; width:100px" >
                 <div class="col mb-2 px-0">
                     <div class="alert alert-success text-white px-5 mt-5 mb-0" role="alert">
                         <div class="container">
@@ -157,13 +158,13 @@
                             <i class="now-ui-icons objects_support-17 lg pull-left mr-3"></i>
                             <strong>OH SNAP!</strong>
                             <span> Change a few things up and try submitting again. </span>
-                            <button type="button" class="close text-white" data-dismiss="alert">
+                            <button type="submit" class="close text-white" data-dismiss="alert">
                                 <i class="now-ui-icons ui-1_simple-remove"></i>
                             </button>
                         </div>
                     </div>
                 </div>
-            </form>
+            </form:form>
         </div>
     </div>
 </div>

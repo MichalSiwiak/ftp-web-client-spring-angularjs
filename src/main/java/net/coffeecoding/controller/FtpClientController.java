@@ -94,13 +94,16 @@ public class FtpClientController {
     @GetMapping("/new-file")
     public String newFileGET(Model model) throws IOException {
         FtpFileClient ftpFileClient = new FtpFileClient();
-        model.addAttribute("file", ftpFileClient);
+        model.addAttribute("ftpFileClient", ftpFileClient);
         return "new-file-form";
     }
 
     @PostMapping("/new-file")
-    public String newFilePOST(@ModelAttribute FtpFileClient ftpFileClient) throws IOException {
+    public String newFilePOST(@ModelAttribute FtpFileClient ftpFileClient, Model model) throws IOException {
+        System.out.println(ftpFileClient.toString());
 
+
+        model.addAttribute("ok", "File was created.");
         return "new-file-form";
     }
 
