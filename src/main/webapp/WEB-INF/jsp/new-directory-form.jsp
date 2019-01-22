@@ -127,37 +127,41 @@
     <div class="row">
         <div class="order-md-1 w-25 col-md-12" style="">
             <h2 class="w-100 text-left mb-5 mt-5">Creating new directory ...</h2>
-            <form id="c_form-h" class="">
-                <div class="form-group row"><label for="inputmailh" class="col-2 col-form-label">Name of new
+            <form action="${pageContext.request.contextPath}/new-directory" method="POST">
+                <div class="form-group row"><label class="col-2 col-form-label">Name of new
                     catalog:</label>
                     <div class="col-10  mb-4">
-                        <input type="email" class="form-control w-25" id="inputmailh" placeholder="mail@example.com">
+                        <input name="dirName" type="text" class="form-control w-25" >
                     </div>
                 </div>
                 <a class="btn btn-secondary " style="height:40px; width:100px"
                    href="${pageContext.request.contextPath}/demo">Back</a>
                 <input class="btn btn-secondary ml-3" type="submit" value="Approve" style="height:40px; width:100px">
                 <div class="col mb-2 px-0">
+                    <c:if test="${success != null}">
                     <div class="alert alert-success text-white px-5 mt-5 mb-0" role="alert">
                         <div class="container">
                             <i class="now-ui-icons ui-2_like lg pull-left mr-3"></i>
-                            <strong>WELL DONE!</strong>
-                            <span> You successfully read this important alert message. </span>
+                            <strong>SUCCESS!</strong>
+                            <span> ${success}</span>
                             <button type="button" class="close text-white" data-dismiss="alert">
                                 <i class="now-ui-icons ui-1_simple-remove"></i>
                             </button>
                         </div>
                     </div>
+                    </c:if>
+                    <c:if test="${error != null}">
                     <div class="alert alert-danger text-white px-5" role="alert">
                         <div class="container">
                             <i class="now-ui-icons objects_support-17 lg pull-left mr-3"></i>
-                            <strong>OH SNAP!</strong>
-                            <span> Change a few things up and try submitting again. </span>
+                            <strong>ERROR!</strong>
+                            <span> ${error}</span>
                             <button type="button" class="close text-white" data-dismiss="alert">
                                 <i class="now-ui-icons ui-1_simple-remove"></i>
                             </button>
                         </div>
                     </div>
+                    </c:if>
                 </div>
             </form>
         </div>

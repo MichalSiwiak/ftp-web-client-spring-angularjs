@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.apache.commons.net.ftp.FTPClient;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import java.io.*;
@@ -29,10 +30,22 @@ public class FtpClientController {
     private FTPClient ftpClient;
     private String serverName;
 
+    private static String showFTPServerResponse(FTPClient ftpClient) {
+        StringBuffer FTPServerResponse = new StringBuffer();
+        String[] replies = ftpClient.getReplyStrings();
+        if (replies != null && replies.length > 0) {
+            for (String reply : replies) {
+                FTPServerResponse.append(reply).append(" ");
+            }
+        }
+        return FTPServerResponse.toString();
+    }
+
 
     @PostConstruct
     public void init() throws IOException {
         ftpClient.changeWorkingDirectory("coffeecode.cba.pl");
+        System.out.println(ftpClient.printWorkingDirectory());
     }
 
     @PostMapping("/file")
@@ -64,13 +77,13 @@ public class FtpClientController {
     }
 
     @PostMapping("/directory")
-    public String directory(@RequestParam("name") String name) throws IOException {
+    public String changeWorkingDirectory(@RequestParam("name") String name) throws IOException {
         this.ftpClient.changeWorkingDirectory(name);
         return "redirect:/demo";
     }
 
     @GetMapping("/back")
-    public String back() throws IOException {
+    public String changeToParentDirectory() throws IOException {
         this.ftpClient.changeToParentDirectory();
         return "redirect:/demo";
     }
@@ -81,8 +94,6 @@ public class FtpClientController {
         List<FtpFileClient> ftpFileClients = new ArrayList<>();
         int id = 0;
         for (FTPFile ftpFile : ftpFiles) {
-
-
             ftpFileClients.add(
                     new FtpFileClient(id, false, ftpFile.getName(), ftpFile.getType(), ftpFile.getSize(), ftpFile.getTimestamp()));
         }
@@ -99,48 +110,76 @@ public class FtpClientController {
     }
 
     @PostMapping("/new-file")
-    public String newFilePOST(@ModelAttribute FtpFileClient ftpFileClient, Model model) throws IOException {
-        System.out.println(ftpFileClient.toString());
+    public String newFilePOST(@RequestParam("fileName") String fileName,
+                              @RequestParam("fileContent") String fileContent,
+                              Model model) throws IOException {
 
+        File firstLocalFile = new File("E:\\"+fileName + ".txt");
+        BufferedWriter writer = new BufferedWriter(new FileWriter(firstLocalFile));
+        writer.write(fileContent);
+        writer.close();
 
-        model.addAttribute("ok", "File was created.");
+        String firstRemoteFile = firstLocalFile.getName();
+        InputStream inputStream = new FileInputStream(firstLocalFile);
+
+        if (ftpClient.storeFile(firstRemoteFile, inputStream)) {
+            model.addAttribute("success", "File created successfully.");
+        }else{
+            model.addAttribute("error", "Unknown error.");
+        }
+
+        inputStream.close();
         return "new-file-form";
     }
 
     @GetMapping("/new-directory")
-    public String newDirectoryGET(Model model) throws IOException {
-
+    public String newDirectoryGET() {
         return "new-directory-form";
     }
 
     @PostMapping("/new-directory")
-    public String newDirectoryPOST(Model model) throws IOException {
-
+    public String newDirectoryPOST(@RequestParam("dirName") String dirName, Model model) throws IOException {
+        String dirToCreate = ftpClient.printWorkingDirectory() + "/" + dirName;
+        boolean success = ftpClient.makeDirectory(dirToCreate);
+        if (success) {
+            model.addAttribute("success", "Successfully created directory: " + dirToCreate);
+        } else {
+            model.addAttribute("error", "Failed to create directory. Server's reply: " + showFTPServerResponse(ftpClient));
+        }
         return "new-directory-form";
     }
 
     @GetMapping("/send-file")
-    public String sendFileGET(Model model) throws IOException {
-
+    public String sendFileGET() {
         return "send-file-form";
     }
 
     @PostMapping("/send-file")
-    public String sendFilePOST(Model model) throws IOException {
+    public String sendFilePOST(@RequestParam("file") MultipartFile multipartFile, Model model) throws IOException {
+
+        if (multipartFile.getOriginalFilename().isEmpty()) {
+            model.addAttribute("error", "Please select a valid file!");
+        } else if (multipartFile.getSize() > 15728640) {
+            model.addAttribute("error", "File can not be larger than 15 MB!");
+        } else {
+            File file = new File(multipartFile.getOriginalFilename());
+            multipartFile.transferTo(file);
+            InputStream inputStream = new FileInputStream(file);
+
+            if (ftpClient.storeFile(multipartFile.getOriginalFilename(), inputStream)) {
+                model.addAttribute("success", "File uploaded successfully.");
+            } else {
+                model.addAttribute("error", "Unknown error.");
+            }
+
+            inputStream.close();
+        }
 
         return "send-file-form";
     }
 
     @GetMapping("/login")
-    public String loginGET(Model model) throws IOException {
-        return "ftp-form-login";
-    }
-
-    @GetMapping("/logout")
-    public String logout( Model model) throws IOException {
-        ftpClient.logout();
-        ftpClient.disconnect();
-        model.addAttribute("logout", "You have been logged out.");
+    public String loginGET() {
         return "ftp-form-login";
     }
 
@@ -175,6 +214,14 @@ public class FtpClientController {
         }
 
 
+    }
+
+    @GetMapping("/logout")
+    public String logout(Model model) throws IOException {
+        ftpClient.logout();
+        ftpClient.disconnect();
+        model.addAttribute("logout", "You have been logged out.");
+        return "ftp-form-login";
     }
 
 

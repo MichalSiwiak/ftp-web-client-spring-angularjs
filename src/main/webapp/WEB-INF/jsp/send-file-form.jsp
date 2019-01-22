@@ -104,16 +104,18 @@
 </div>
 
 
-<nav class="navbar navbar-expand-md navbar-dark mb-4 bg-info" >
+<nav class="navbar navbar-expand-md navbar-dark mb-4 bg-info">
     <div class="container">
         <a class="navbar-brand" href="#">SERVER: ${serverName}</a>
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarPrimaryContent">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+                data-target="#navbarPrimaryContent">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse text-center justify-content-end" id="navbarPrimaryContent">
             <ul class="navbar-nav">
                 <li class="nav-item mx-1">
-                    <a class="nav-link active align-items-center d-flex" href="${pageContext.request.contextPath}/logout">
+                    <a class="nav-link active align-items-center d-flex"
+                       href="${pageContext.request.contextPath}/logout">
                         <i class="fa fa-sign-out fa-2x" aria-hidden="true"></i> &nbsp; LOGOUT</a>
                 </li>
             </ul>
@@ -126,35 +128,40 @@
     <div class="row">
         <div class="order-md-1 w-25 col-md-12" style="">
             <h2 class="w-100 text-left mb-5 mt-5">Sending new file ...</h2>
-            <form id="c_form-h" class="">
-                <div class="form-group row"><label for="inputpasswordh" class="col-2 col-form-label">New file to
+            <form action="${pageContext.request.contextPath}/send-file" enctype="multipart/form-data" method="POST">
+                <div class="form-group row"><label class="col-2 col-form-label">New file to
                     send:</label>
                     <div class="col-10  mb-4">
-                        <input type="file" class="form-control w-25" id="inputpasswordh" placeholder="Password"></div>
+                        <input name="file" type="file" class="form-control w-25"></div>
                 </div>
-                <a class="btn btn-secondary" href="${pageContext.request.contextPath}/demo">Back</a>
-                <a class="btn btn-secondary ml-3" href="${pageContext.request.contextPath}/demo">Approve</a>
+                <a class="btn btn-secondary " style="height:40px; width:100px"
+                   href="${pageContext.request.contextPath}/demo">Back</a>
+                <input class="btn btn-secondary ml-3" type="submit" value="Approve" style="height:40px; width:100px">
                 <div class="col mb-2 px-0">
-                    <div class="alert alert-success text-white px-5 mt-5 mb-0" role="alert">
-                        <div class="container">
-                            <i class="now-ui-icons ui-2_like lg pull-left mr-3"></i>
-                            <strong>WELL DONE!</strong>
-                            <span> You successfully read this important alert message. </span>
-                            <button type="button" class="close text-white" data-dismiss="alert">
-                                <i class="now-ui-icons ui-1_simple-remove"></i>
-                            </button>
+                    <c:if test="${success != null}">
+                        <div class="alert alert-success text-white px-5 mt-5 mb-0" role="alert">
+                            <div class="container">
+                                <i class="now-ui-icons ui-2_like lg pull-left mr-3"></i>
+                                <strong>SUCCESS!</strong>
+                                <span> ${success}</span>
+                                <button type="button" class="close text-white" data-dismiss="alert">
+                                    <i class="now-ui-icons ui-1_simple-remove"></i>
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="alert alert-danger text-white px-5" role="alert">
-                        <div class="container">
-                            <i class="now-ui-icons objects_support-17 lg pull-left mr-3"></i>
-                            <strong>OH SNAP!</strong>
-                            <span> Change a few things up and try submitting again. </span>
-                            <button type="button" class="close text-white" data-dismiss="alert">
-                                <i class="now-ui-icons ui-1_simple-remove"></i>
-                            </button>
+                    </c:if>
+                    <c:if test="${error != null}">
+                        <div class="alert alert-danger text-white px-5" role="alert">
+                            <div class="container">
+                                <i class="now-ui-icons objects_support-17 lg pull-left mr-3"></i>
+                                <strong>ERROR!</strong>
+                                <span> ${error}</span>
+                                <button type="button" class="close text-white" data-dismiss="alert">
+                                    <i class="now-ui-icons ui-1_simple-remove"></i>
+                                </button>
+                            </div>
                         </div>
-                    </div>
+                    </c:if>
                 </div>
             </form>
         </div>
