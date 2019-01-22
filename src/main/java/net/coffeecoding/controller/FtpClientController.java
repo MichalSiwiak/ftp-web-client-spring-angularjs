@@ -1,6 +1,8 @@
 package net.coffeecoding.controller;
 
 import net.coffeecoding.model.FtpFileClient;
+import net.coffeecoding.model.FtpServerData;
+import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -124,10 +126,40 @@ public class FtpClientController {
         return "send-file-form";
     }
 
-    @GetMapping("/cokolwiek")
-    public String login(Model model) throws IOException {
-
+    @GetMapping("/login")
+    public String loginGET(Model model) throws IOException {
+        FtpServerData ftpServerData = new FtpServerData();
+        model.addAttribute("server", ftpServerData);
         return "ftp-form-login";
+    }
+
+    @PostMapping("/authenticate")
+    public String loginPOST(@ModelAttribute FtpServerData server, Model model) {
+
+        FTPClient ftpClient = new FTPClient();
+        boolean login = false;
+
+        try {
+            ftpClient.connect(server.getServerName(), server.getPortNumber());
+            login = ftpClient.login(server.getUsername(), server.getPassword());
+            ftpClient.enterLocalPassiveMode();
+            ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+        } catch (Exception e) {
+            e.printStackTrace();
+            model.addAttribute("error", "Unable to connect to the server - check the data entered!");
+            System.out.println("Dupa");
+            return "ftp-form-login";
+        }
+
+        if (login != false) {
+            this.ftpClient = ftpClient;
+            return "ftp-form-login";
+        } else {
+            model.addAttribute("error", "Unable to connect to the server - check the data entered!");
+            return "ftp-form-login";
+        }
+
+
     }
 
 

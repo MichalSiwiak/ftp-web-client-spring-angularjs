@@ -111,15 +111,13 @@
                         <div class="col-md-12">
                             <h5 class="mb-4"><b>FTP WEB CLIENT</b></h5>
                         </div>
-                        <c:if test="${param.error != null}">
-                            <div class="alert alert-danger col-xs-offset-1 col-xs-10 w-100 text-light"> Invalid
-                                username/password.
-                            </div>
+                        <c:if test="${error != null}">
+                            <div class="alert alert-danger col-xs-offset-1 col-xs-10 w-100 text-light"> ${error} </div>
                         </c:if>
                     </div>
                     <div class="row pt-2 mt-0">
                         <div class="col bg-dark">
-                            <form:form action="${pageContext.request.contextPath}/authenticateTheUser"
+                            <form:form modelAttribute="server" action="${pageContext.request.contextPath}/authenticate"
                                        method="POST" autocomplete="off">
                                 <div class="form-group mb-2">
                                     <div class="input-group border-0">
@@ -128,8 +126,9 @@
                         <i class="fa fa-server text-light" aria-hidden="true"></i>
                           </span>
                                         </div>
-                                        <input type="text" name="username" class="form-control text-center"
-                                               placeholder="server">
+                                        <form:input path="serverName" type="text"
+                                                    class="form-control text-center"
+                                                    placeholder="Server Name"/>
                                     </div>
                                 </div>
                                 <div class="form-group mb-2">
@@ -139,8 +138,9 @@
                         <i class="fa fa-plug text-light" aria-hidden="true"></i>
                           </span>
                                         </div>
-                                        <input type="text" name="username" class="form-control text-center"
-                                               placeholder="port number">
+                                        <form:input path="portNumber" type="number" value="21"
+                                                    class="form-control text-center"
+                                                    placeholder="port number"/>
                                     </div>
                                 </div>
                                 <div class="form-group mb-2">
@@ -150,8 +150,9 @@
                            <i class="fa fa-user fa-lg text-light" aria-hidden="true"></i>
                           </span>
                                         </div>
-                                        <input type="text" name="username" class="form-control text-center"
-                                               placeholder="username">
+                                        <form:input path="username" type="text"
+                                                    class="form-control text-center"
+                                                    placeholder="username dd"/>
                                     </div>
                                 </div>
                                 <div class="form-group mb-3">
@@ -161,8 +162,9 @@
                             <i class="fa fa-lock fa-lg text-light" aria-hidden="true"></i>
                           </span>
                                         </div>
-                                        <input type="password" name="password" class="form-control text-center"
-                                               placeholder="password">
+                                        <form:input path="password" type="password"
+                                                    class="form-control text-center"
+                                                    placeholder="passwordd "/>
                                     </div>
                                 </div>
                                 <button type="submit"
