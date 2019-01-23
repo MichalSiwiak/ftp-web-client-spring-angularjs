@@ -124,7 +124,7 @@
 </nav>
 
 
-<div class="pt-0 pb-0" >
+<div class="pt-0 pb-0">
     <div class="container">
         <h2 class="w-100 text-center">Web based FTP client</h2>
         <div class="row">
@@ -167,7 +167,7 @@
                     <td></td>
                     <td>
                         <form action="${pageContext.request.contextPath}/back" method="get" class="m-0">
-                            <button type="submit" class="btn btn-info" style="width:193px!important">
+                            <button type="submit" title="Back to previous folder" class="btn btn-info" style="width:193px!important">
                                 <i class="fa fa-arrow-left fa-lg" aria-hidden="true"></i></button>
                         </form>
                     </td>
@@ -179,7 +179,7 @@
                         <td>${file.size}</td>
                         <td>
                             <c:choose>
-                                <c:when test="${file.type=='1'}">
+                                <c:when test="${file.type=='DIRECTORY'}">
                                     <form action="${pageContext.request.contextPath}/directory" method="post">
                                         <button type="submit" title="Go to directory" class="btn btn-info"
                                                 formmethod="post" name="name"
