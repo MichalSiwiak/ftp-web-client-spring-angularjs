@@ -24,28 +24,83 @@ import java.util.List;
 
 
 @Controller
-public class FtpClientController {
+public class FtpController {
 
     @Autowired
     private FTPClient ftpClient;
     private String serverName;
     private List<FileModel> fileModels;
 
-    private static String showFTPServerResponse(FTPClient ftpClient) {
-        StringBuffer FTPServerResponse = new StringBuffer();
-        String[] replies = ftpClient.getReplyStrings();
-        if (replies != null && replies.length > 0) {
-            for (String reply : replies) {
-                FTPServerResponse.append(reply).append(" ");
-            }
-        }
-        return FTPServerResponse.toString();
-    }
-
 
     @PostConstruct
     public void init() throws IOException {
         ftpClient.changeWorkingDirectory("coffeecode.cba.pl");
+    }
+
+    @GetMapping("/login")
+    public String loginGET() {
+        return "ftp-form-login";
+    }
+
+    @PostMapping("/authenticate")
+    public String loginPOST(@RequestParam("serverName") String serverName,
+                            @RequestParam("portNumber") String portNumber,
+                            @RequestParam("username") String username,
+                            @RequestParam("password") String password,
+                            Model model) {
+
+        FTPClient ftpClient = new FTPClient();
+        boolean login = false;
+
+        try {
+            ftpClient.connect(serverName, Integer.parseInt(portNumber));
+            login = ftpClient.login(username, password);
+            ftpClient.enterLocalPassiveMode();
+            ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+            this.serverName = serverName;
+        } catch (IOException e) {
+            e.printStackTrace();
+            model.addAttribute("error", "Unable to connect to the server - unknown host!");
+            return "ftp-form-login";
+        }
+
+        if (login != false) {
+            this.ftpClient = ftpClient;
+            return "redirect:/demo";
+        } else {
+            model.addAttribute("error", "Unable to connect to the server - invalid username or password!");
+            return "ftp-form-login";
+        }
+    }
+
+    @GetMapping("/demo")
+    public String getAllFiles(Model model) throws IOException {
+
+        List<FTPFile> ftpFiles = Arrays.asList(ftpClient.listFiles());
+        List<FileModel> ftpFileClients = new ArrayList<>();
+        int id = 0;
+        String type;
+        for (FTPFile ftpFile : ftpFiles) {
+
+            if (ftpFile.getType() == 1)
+                type = "DIRECTORY";
+            else
+                type = "FILE";
+
+            if (!(ftpFile.getName().equals(".") || ftpFile.getName().equals(".."))) {
+                ftpFileClients.add(
+                        new FileModel(id,
+                                ftpFile.getName(),
+                                type,
+                                roundDouble2precision((double) ftpFile.getSize() / (1024 * 1024), 2) + " MB"));
+                id++;
+            }
+        }
+
+        model.addAttribute("files", ftpFileClients);
+        this.fileModels = ftpFileClients;
+        model.addAttribute("serverName", serverName);
+        return "ftp-form";
     }
 
     @PostMapping("/file")
@@ -86,32 +141,6 @@ public class FtpClientController {
     public String changeToParentDirectory() throws IOException {
         this.ftpClient.changeToParentDirectory();
         return "redirect:/demo";
-    }
-
-    @GetMapping("/demo")
-    public String getAllFiles(Model model) throws IOException {
-        List<FTPFile> ftpFiles = Arrays.asList(ftpClient.listFiles());
-        List<FileModel> ftpFileClients = new ArrayList<>();
-        int id = 0;
-        String type;
-        for (FTPFile ftpFile : ftpFiles) {
-
-            if (ftpFile.getType() == 1)
-                type = "DIRECTORY";
-            else
-                type = "FILE";
-
-            ftpFileClients.add(
-                    new FileModel(id,
-                            ftpFile.getName(),
-                            type,
-                            roundDouble2precision((double) ftpFile.getSize() / (1024 * 1024), 2) + " MB"));
-            id++;
-        }
-        model.addAttribute("files", ftpFileClients);
-        this.fileModels = ftpFileClients;
-        model.addAttribute("serverName", serverName);
-        return "ftp-form";
     }
 
     @GetMapping("/new-file")
@@ -190,41 +219,6 @@ public class FtpClientController {
         return "send-file-form";
     }
 
-    @GetMapping("/login")
-    public String loginGET() {
-        return "ftp-form-login";
-    }
-
-    @PostMapping("/authenticate")
-    public String loginPOST(@RequestParam("serverName") String serverName,
-                            @RequestParam("portNumber") String portNumber,
-                            @RequestParam("username") String username,
-                            @RequestParam("password") String password,
-                            Model model) {
-
-        FTPClient ftpClient = new FTPClient();
-        boolean login = false;
-
-        try {
-            ftpClient.connect(serverName, Integer.parseInt(portNumber));
-            login = ftpClient.login(username, password);
-            ftpClient.enterLocalPassiveMode();
-            ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
-            this.serverName = serverName;
-        } catch (IOException e) {
-            e.printStackTrace();
-            model.addAttribute("error", "Unable to connect to the server - unknown host!");
-            return "ftp-form-login";
-        }
-
-        if (login != false) {
-            this.ftpClient = ftpClient;
-            return "redirect:/demo";
-        } else {
-            model.addAttribute("error", "Unable to connect to the server - invalid username or password!");
-            return "ftp-form-login";
-        }
-    }
 
     @GetMapping("/delete-file/{id}")
     public String deleteFile(@PathVariable String id) throws IOException {
@@ -244,7 +238,10 @@ public class FtpClientController {
     public String deleteDirectory(@PathVariable String id) throws IOException {
 
         String fileName = fileModels.get(Integer.parseInt(id)).getName();
-        if (ftpClient.removeDirectory(ftpClient.printWorkingDirectory() + "/" + fileName)) {
+
+        boolean removed = removeDirectory(ftpClient, fileName, "");
+
+        if (removed) {
             System.out.println("Directory was deleted successfully.");
             /*model.addAttribute("success", "Directory was deleted successfully.");*/
         } else {
@@ -252,6 +249,57 @@ public class FtpClientController {
         }
 
         return "redirect:/demo";
+    }
+
+    public static boolean removeDirectory(FTPClient ftpClient, String parentDir,
+                                          String currentDir) throws IOException {
+        boolean removed = false;
+
+        String dirToList = parentDir;
+        if (!currentDir.equals("")) {
+            dirToList += "/" + currentDir;
+        }
+
+        FTPFile[] subFiles = ftpClient.listFiles(dirToList);
+
+        if (subFiles != null && subFiles.length > 0) {
+            for (FTPFile aFile : subFiles) {
+                String currentFileName = aFile.getName();
+                if (currentFileName.equals(".") || currentFileName.equals("..")) {
+                    // skip parent directory and the directory itself
+                    continue;
+                }
+                String filePath = parentDir + "/" + currentDir + "/"
+                        + currentFileName;
+                if (currentDir.equals("")) {
+                    filePath = parentDir + "/" + currentFileName;
+                }
+
+                if (aFile.isDirectory()) {
+                    // remove the sub directory
+                    removeDirectory(ftpClient, dirToList, currentFileName);
+                } else {
+                    // delete the file
+                    boolean deleted = ftpClient.deleteFile(filePath);
+                    if (deleted) {
+                        System.out.println("DELETED the file: " + filePath);
+                    } else {
+                        System.out.println("CANNOT delete the file: "
+                                + filePath);
+                    }
+                }
+            }
+
+            // finally, remove the directory itself
+            removed = ftpClient.removeDirectory(dirToList);
+            if (removed) {
+                System.out.println("REMOVED the directory: " + dirToList);
+            } else {
+                System.out.println("CANNOT remove the directory: " + dirToList);
+            }
+        }
+
+        return removed;
     }
 
     @GetMapping("/rename-file")
@@ -307,5 +355,15 @@ public class FtpClientController {
         return (double) tmp / factor;
     }
 
+    private static String showFTPServerResponse(FTPClient ftpClient) {
+        StringBuffer FTPServerResponse = new StringBuffer();
+        String[] replies = ftpClient.getReplyStrings();
+        if (replies != null && replies.length > 0) {
+            for (String reply : replies) {
+                FTPServerResponse.append(reply).append(" ");
+            }
+        }
+        return FTPServerResponse.toString();
+    }
 
 }

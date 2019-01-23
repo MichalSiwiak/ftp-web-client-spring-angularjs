@@ -188,7 +188,7 @@
                                             <i class="fa fa-sign-in fa-lg" aria-hidden="true"></i></button>
                                         <a href="${pageContext.request.contextPath}/delete-directory/${file.id}"
                                            title="Delete directory"
-                                           onclick="if (!(confirm('Are you sure you want to delete this directory?'))) return false"
+                                           onclick="if (!(confirm('Are you sure you want to delete this directory with all content? This operation can not be undone!'))) return false"
                                            class="btn btn-danger" style="width:60px!important">
                                             <i class="fa fa-trash fa-lg" aria-hidden="true"></i></a>
                                         <a href="${pageContext.request.contextPath}/rename-file?id=${file.id}"
