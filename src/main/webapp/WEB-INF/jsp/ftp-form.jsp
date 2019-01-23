@@ -104,16 +104,18 @@
 </div>
 
 
-<nav class="navbar navbar-expand-md navbar-dark mb-4 bg-info" >
+<nav class="navbar navbar-expand-md navbar-dark mb-4 bg-info">
     <div class="container">
         <a class="navbar-brand" href="#">SERVER: ${serverName}</a>
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarPrimaryContent">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+                data-target="#navbarPrimaryContent">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse text-center justify-content-end" id="navbarPrimaryContent">
             <ul class="navbar-nav">
                 <li class="nav-item mx-1">
-                    <a class="nav-link active align-items-center d-flex" href="${pageContext.request.contextPath}/logout">
+                    <a class="nav-link active align-items-center d-flex"
+                       href="${pageContext.request.contextPath}/logout">
                         <i class="fa fa-sign-out fa-2x" aria-hidden="true"></i> &nbsp; LOGOUT</a>
                 </li>
             </ul>
@@ -122,37 +124,23 @@
 </nav>
 
 
-<div class="pt-5 pb-0">
+<div class="pt-0 pb-0" >
     <div class="container">
+        <h2 class="w-100 text-center">Web based FTP client</h2>
         <div class="row">
-            <div class="col-md-2">
-                <form action="${pageContext.request.contextPath}/new-directory">
-                    <button class="btn w-100 btn-success" type="submit">New directory </button>
+            <div class="col-md-4">
+                <form action="${pageContext.request.contextPath}/new-directory" class="text-right">
+                    <button class="btn btn-dark rounded w-75" type="submit">New directory</button>
                 </form>
             </div>
-            <div class="col-md-2">
-                <form action="${pageContext.request.contextPath}/new-file">
-                    <button class="btn w-100 btn-success" type="submit">New file</button>
+            <div class="col-md-4">
+                <form action="${pageContext.request.contextPath}/new-file" class="text-center">
+                    <button class="btn btn-dark rounded w-75" type="submit">New file</button>
                 </form>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-4">
                 <form action="${pageContext.request.contextPath}/send-file">
-                    <button class="btn w-100 btn-info" type="submit">Send file</button>
-                </form>
-            </div>
-            <div class="col-md-2">
-                <form action="${pageContext.request.contextPath}/new-directory">
-                    <button class="btn w-100 btn-danger" type="submit">Delete</button>
-                </form>
-            </div>
-            <div class="col-md-2">
-                <form action="${pageContext.request.contextPath}/new-directory">
-                    <button class="btn w-100 btn-secondary" type="submit">Change name</button>
-                </form>
-            </div>
-            <div class="col-md-2">
-                <form action="${pageContext.request.contextPath}/new-directory">
-                    <button class="btn w-100 btn-secondary" type="submit">Unzip</button>
+                    <button class="btn btn-dark rounded w-75" type="submit">Send file</button>
                 </form>
             </div>
         </div>
@@ -160,61 +148,72 @@
 </div>
 
 
-<div class="py-5 border-0">
+<div class="py-5">
     <div class="container" style="min-height: 1000px">
-        <div class="row">
-            <h2 class="w-100 text-left">Web based FTP client</h2>
-            <table class="table table-striped">
-                <thead class="thead-light">
+        <div class="row table-responsive">
+            <table class="table table-hover table-dark rounded">
+                <thead class="thead-dark">
                 <tr class="text-center">
-                    <th>Select</th>
-                    <th>Name</th>
-                    <th>Action</th>
-                    <th>Type</th>
-                    <th>Size</th>
-
+                    <th class="text-center rounded border-0">Name</th>
+                    <th class="text-center rounded border-0">Type</th>
+                    <th class="text-center rounded border-0">Size</th>
+                    <th class="text-center rounded border-0">Action</th>
                 </tr>
                 </thead>
                 <tbody class="text-center">
                 <tr>
                     <td></td>
                     <td></td>
+                    <td></td>
                     <td>
-                        <form action="${pageContext.request.contextPath}/back" method="get">
-                            <button type="submit" class="btn btn-dark w-50">
-                                <i class="fa fa-arrow-left" aria-hidden="true"></i>&nbsp;Back
-                            </button>
+                        <form action="${pageContext.request.contextPath}/back" method="get" class="m-0">
+                            <button type="submit" class="btn btn-info" style="width:193px!important">
+                                <i class="fa fa-arrow-left fa-lg" aria-hidden="true"></i></button>
                         </form>
                     </td>
-                    <td></td>
-                    <td></td>
                 </tr>
                 <c:forEach var="file" items="${files}">
                     <tr>
-                        <td><input type="checkbox" value="on" checked=""></td>
                         <td>${file.name}</td>
+                        <td>${file.type}</td>
+                        <td>${file.size}</td>
                         <td>
                             <c:choose>
                                 <c:when test="${file.type=='1'}">
                                     <form action="${pageContext.request.contextPath}/directory" method="post">
-                                        <button name="name" value="${file.name}" type="submit" formmethod="post"
-                                                class="btn btn-dark w-50">
-                                            <i class="fa fa-sign-in" aria-hidden="true"></i>&nbsp;Open
-                                        </button>
+                                        <button type="submit" title="Go to directory" class="btn btn-info"
+                                                formmethod="post" name="name"
+                                                value="${file.name}" style="width:60px!important">
+                                            <i class="fa fa-sign-in fa-lg" aria-hidden="true"></i></button>
+                                        <a href="${pageContext.request.contextPath}/delete-directory/${file.id}"
+                                           title="Delete directory"
+                                           onclick="if (!(confirm('Are you sure you want to delete this directory?'))) return false"
+                                           class="btn btn-danger" style="width:60px!important">
+                                            <i class="fa fa-trash fa-lg" aria-hidden="true"></i></a>
+                                        <button type="button" title="Edit directory" class="btn btn-warning"
+                                                style="width:60px!important">
+                                            <i class="fa fa-pencil-square fa-lg" aria-hidden="true"></i></button>
                                     </form>
                                 </c:when>
                                 <c:otherwise>
                                     <form action="${pageContext.request.contextPath}/file" method="post">
-                                        <button name="name" value="${file.name}" type="submit"
-                                                formmethod="post" class="btn btn-dark w-50">
-                                            <i class="fa fa-download" aria-hidden="true"></i>&nbsp;Download
-                                        </button>
+                                        <button type="submit" title="Download file" class="btn btn-info"
+                                                style="width:60px!important"
+                                                formmethod="post" name="name" value="${file.name}"
+                                                onclick="if (!(confirm('Are you sure you want to download this file?'))) return false">
+                                            <i class="fa fa-download fa-lg" aria-hidden="true"></i></button>
+                                        <a href="${pageContext.request.contextPath}/delete-file/${file.id}"
+                                           title="Delete file"
+                                           onclick="if (!(confirm('Are you sure you want to delete this file?'))) return false"
+                                           class="btn btn-danger" style="width:60px!important">
+                                            <i class="fa fa-trash fa-lg" aria-hidden="true"></i></a>
+                                        <button type="button" title="Edit file" class="btn btn-warning"
+                                                style="width:60px!important">
+                                            <i class="fa fa-pencil-square fa-lg" aria-hidden="true"></i></button>
                                     </form>
                                 </c:otherwise>
                             </c:choose>
                         </td>
-                        <td>${file.type}</td>
-                        <td>${file.size}</td>
                     </tr>
                 </c:forEach>
                 </tbody>

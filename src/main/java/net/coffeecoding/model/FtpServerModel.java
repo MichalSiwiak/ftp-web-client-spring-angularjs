@@ -1,6 +1,6 @@
 package net.coffeecoding.model;
 
-public class FtpServerData {
+public class FtpServerModel {
 
     private String serverName;
     private int portNumber;

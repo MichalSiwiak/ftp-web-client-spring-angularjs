@@ -1,7 +1,6 @@
 package net.coffeecoding.controller;
 
-import net.coffeecoding.model.FtpFileClient;
-import net.coffeecoding.model.FtpServerData;
+import net.coffeecoding.model.FileModel;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPFile;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +28,7 @@ public class FtpClientController {
     @Autowired
     private FTPClient ftpClient;
     private String serverName;
+    private List<FileModel> fileModels;
 
     private static String showFTPServerResponse(FTPClient ftpClient) {
         StringBuffer FTPServerResponse = new StringBuffer();
@@ -45,7 +45,6 @@ public class FtpClientController {
     @PostConstruct
     public void init() throws IOException {
         ftpClient.changeWorkingDirectory("coffeecode.cba.pl");
-        System.out.println(ftpClient.printWorkingDirectory());
     }
 
     @PostMapping("/file")
@@ -91,20 +90,32 @@ public class FtpClientController {
     @GetMapping("/demo")
     public String getAllFiles(Model model) throws IOException {
         List<FTPFile> ftpFiles = Arrays.asList(ftpClient.listFiles());
-        List<FtpFileClient> ftpFileClients = new ArrayList<>();
+        List<FileModel> ftpFileClients = new ArrayList<>();
         int id = 0;
+        String type;
         for (FTPFile ftpFile : ftpFiles) {
+
+            if (ftpFile.getType() == 1)
+                type = "DIRECTORY";
+            else
+                type = "FILE";
+
             ftpFileClients.add(
-                    new FtpFileClient(id, false, ftpFile.getName(), ftpFile.getType(), ftpFile.getSize(), ftpFile.getTimestamp()));
+                    new FileModel(id,
+                            ftpFile.getName(),
+                            type,
+                            roundDouble2precision((double) ftpFile.getSize() / (1024 * 1024), 2) + " MB"));
+            id++;
         }
         model.addAttribute("files", ftpFileClients);
+        this.fileModels = ftpFileClients;
         model.addAttribute("serverName", serverName);
         return "ftp-form";
     }
 
     @GetMapping("/new-file")
     public String newFileGET(Model model) throws IOException {
-        FtpFileClient ftpFileClient = new FtpFileClient();
+        FileModel ftpFileClient = new FileModel();
         model.addAttribute("ftpFileClient", ftpFileClient);
         return "new-file-form";
     }
@@ -114,7 +125,7 @@ public class FtpClientController {
                               @RequestParam("fileContent") String fileContent,
                               Model model) throws IOException {
 
-        File firstLocalFile = new File("E:\\"+fileName + ".txt");
+        File firstLocalFile = new File("E:\\" + fileName + ".txt");
         BufferedWriter writer = new BufferedWriter(new FileWriter(firstLocalFile));
         writer.write(fileContent);
         writer.close();
@@ -124,7 +135,7 @@ public class FtpClientController {
 
         if (ftpClient.storeFile(firstRemoteFile, inputStream)) {
             model.addAttribute("success", "File created successfully.");
-        }else{
+        } else {
             model.addAttribute("error", "Unknown error.");
         }
 
@@ -212,9 +223,36 @@ public class FtpClientController {
             model.addAttribute("error", "Unable to connect to the server - invalid username or password!");
             return "ftp-form-login";
         }
-
-
     }
+
+    @GetMapping("/delete-file/{id}")
+    public String deleteFile(@PathVariable String id) throws IOException {
+
+        String fileName = fileModels.get(Integer.parseInt(id)).getName();
+        if (ftpClient.deleteFile(ftpClient.printWorkingDirectory() + "/" + fileName)) {
+            System.out.println("File was deleted successfully.");
+            /*model.addAttribute("success", "File was deleted successfully.");*/
+        } else {
+
+        }
+
+        return "redirect:/demo";
+    }
+
+    @GetMapping("/delete-directory/{id}")
+    public String deleteDirectory(@PathVariable String id) throws IOException {
+
+        String fileName = fileModels.get(Integer.parseInt(id)).getName();
+        if (ftpClient.removeDirectory(ftpClient.printWorkingDirectory() + "/" + fileName)) {
+            System.out.println("Directory was deleted successfully.");
+            /*model.addAttribute("success", "Directory was deleted successfully.");*/
+        } else {
+
+        }
+
+        return "redirect:/demo";
+    }
+
 
     @GetMapping("/logout")
     public String logout(Model model) throws IOException {
@@ -222,6 +260,16 @@ public class FtpClientController {
         ftpClient.disconnect();
         model.addAttribute("logout", "You have been logged out.");
         return "ftp-form-login";
+    }
+
+
+    public static double roundDouble2precision(double value, int places) {
+        if (places < 0)
+            throw new IllegalArgumentException();
+        long factor = (long) Math.pow(10, places);
+        value = value * factor;
+        long tmp = Math.round(value);
+        return (double) tmp / factor;
     }
 
 
