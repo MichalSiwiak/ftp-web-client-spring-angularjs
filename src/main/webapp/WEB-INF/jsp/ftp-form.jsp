@@ -168,7 +168,7 @@
                     <td>
                         <form action="${pageContext.request.contextPath}/back" method="get" class="m-0">
                             <button type="submit" title="Back to previous folder" class="btn btn-info"
-                                    style="width:193px!important">
+                                    style="width:193px!important" onclick="myFunction()">
                                 <i class="fa fa-arrow-left fa-lg" aria-hidden="true"></i></button>
                         </form>
                     </td>
@@ -184,16 +184,17 @@
                                     <form action="${pageContext.request.contextPath}/directory" method="post">
                                         <button type="submit" title="Go to directory" class="btn btn-info"
                                                 formmethod="post" name="name"
-                                                value="${file.name}" style="width:60px!important">
+                                                value="${file.name}" style="width:60px!important"
+                                                onclick="myFunction()">
                                             <i class="fa fa-sign-in fa-lg" aria-hidden="true"></i></button>
                                         <a href="${pageContext.request.contextPath}/delete-directory/${file.id}"
                                            title="Delete directory"
-                                           onclick="if (!(confirm('Are you sure you want to delete this directory with all content? This operation can not be undone!'))) return false"
+                                           onclick="if (!(confirm('Are you sure you want to delete this directory with all content? This operation can not be undone!'))) return false;myFunction();"
                                            class="btn btn-danger" style="width:60px!important">
                                             <i class="fa fa-trash fa-lg" aria-hidden="true"></i></a>
                                         <a href="${pageContext.request.contextPath}/rename-file?id=${file.id}"
                                            title="Edit directory"
-                                           class="btn btn-warning" style="width:60px!important">
+                                           class="btn btn-warning" style="width:60px!important" onclick="myFunction()">
                                             <i class="fa fa-pencil-square fa-lg" aria-hidden="true"></i>
                                         </a>
                                     </form>
@@ -203,16 +204,16 @@
                                         <button type="submit" title="Download file" class="btn btn-info"
                                                 style="width:60px!important"
                                                 formmethod="post" name="name" value="${file.name}"
-                                                onclick="if (!(confirm('Are you sure you want to download this file?'))) return false">
+                                                onclick="if (!(confirm('Are you sure you want to download this file?'))) return false;myFunction();">
                                             <i class="fa fa-download fa-lg" aria-hidden="true"></i></button>
                                         <a href="${pageContext.request.contextPath}/delete-file/${file.id}"
                                            title="Delete file"
-                                           onclick="if (!(confirm('Are you sure you want to delete this file?'))) return false"
+                                           onclick="if (!(confirm('Are you sure you want to delete this file?'))) return false;myFunction()"
                                            class="btn btn-danger" style="width:60px!important">
                                             <i class="fa fa-trash fa-lg" aria-hidden="true"></i></a>
                                         <a href="${pageContext.request.contextPath}/rename-file?id=${file.id}"
                                            title="Edit file"
-                                           class="btn btn-warning" style="width:60px!important">
+                                           class="btn btn-warning" style="width:60px!important" onclick="myFunction()">
                                             <i class="fa fa-pencil-square fa-lg" aria-hidden="true"></i>
                                         </a>
                                     </form>
@@ -225,6 +226,22 @@
             </table>
         </div>
     </div>
+    <script>
+        $(window).scroll(function () {
+            sessionStorage.scrollTop = $(this).scrollTop();
+        });
+
+        $(document).ready(function () {
+            if (sessionStorage.scrollTop != "undefined") {
+                $(window).scrollTop(sessionStorage.scrollTop);
+            }
+        });
+
+
+        function myFunction() {
+            $("form").submit();
+        }
+    </script>
 </div>
 <footer class="py-5 bg-dark text-muted">
     <div class="container">
