@@ -32,7 +32,6 @@ public class FtpClientConfig implements WebMvcConfigurer {
             ftpClient.connect(env.getProperty("ftp.server"), Integer.parseInt(env.getProperty("ftp.port")));
             logger.info("ftp.user=" + env.getProperty("ftp.user"));
             boolean login = ftpClient.login(env.getProperty("ftp.user"), env.getProperty("ftp.password"));
-            System.out.println(login);
             ftpClient.enterLocalPassiveMode();
             ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
 

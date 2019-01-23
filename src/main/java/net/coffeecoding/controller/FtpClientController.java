@@ -1,6 +1,7 @@
 package net.coffeecoding.controller;
 
 import net.coffeecoding.model.FileModel;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPFile;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +57,7 @@ public class FtpClientController {
 
         try {
             remoteFile = ftpClient.printWorkingDirectory() + "/" + fileName;
-            downloadFile = new File("/tmp/" + fileName);
+            downloadFile = new File("E:\\+" + fileName);
             OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(downloadFile));
             ftpClient.retrieveFile(remoteFile, outputStream);
             outputStream.close();
@@ -251,6 +252,40 @@ public class FtpClientController {
         }
 
         return "redirect:/demo";
+    }
+
+    @GetMapping("/rename-file")
+    public String renameFileGET(@RequestParam("id") String id, Model model) {
+
+        FileModel fileModel = fileModels.get(Integer.parseInt(id));
+        model.addAttribute("fileModel", fileModel);
+
+        return "change-name-form";
+    }
+
+    @PostMapping("/rename-file") //zrobić inaczej bez parametru - pobrać starą nazwe z listy po id
+    public String renameFilePOST(@RequestParam("id") String id,
+                                 @RequestParam("name") String name,
+                                 Model model) throws IOException {
+
+        String newDir = name;
+        String oldDir = fileModels.get(Integer.parseInt(id)).getName();
+        String extension = FilenameUtils.getExtension(oldDir);
+        boolean rename;
+
+        if (fileModels.get(Integer.parseInt(id)).getType().equals("DIRECTORY")) {
+            rename = ftpClient.rename(oldDir, newDir);
+        } else {
+            rename = ftpClient.rename(oldDir, newDir + "." + extension);
+        }
+
+        if (rename) {
+            model.addAttribute("success", oldDir + " was successfully renamed to: " + newDir + ".");
+        } else {
+            model.addAttribute("error", "Failed to rename: " + oldDir + ".");
+        }
+
+        return "change-name-form";
     }
 
 

@@ -123,109 +123,53 @@
     </div>
 </nav>
 
-
-<div class="pt-0 pb-0">
-    <div class="container">
-        <h2 class="w-100 text-center">Web based FTP client</h2>
-        <div class="row">
-            <div class="col-md-4">
-                <form action="${pageContext.request.contextPath}/new-directory" class="text-right">
-                    <button class="btn btn-dark rounded w-75" type="submit">New directory</button>
-                </form>
-            </div>
-            <div class="col-md-4">
-                <form action="${pageContext.request.contextPath}/new-file" class="text-center">
-                    <button class="btn btn-dark rounded w-75" type="submit">New file</button>
-                </form>
-            </div>
-            <div class="col-md-4">
-                <form action="${pageContext.request.contextPath}/send-file">
-                    <button class="btn btn-dark rounded w-75" type="submit">Send file</button>
-                </form>
-            </div>
+<div class="container">
+    <div class="row">
+        <div class="order-md-1 w-25 col-md-12" style="">
+            <h2 class="w-100 text-left mb-5 mt-5">Creating new directory ...</h2>
+            <form:form modelAttribute="fileModel" action="${pageContext.request.contextPath}/rename-file" method="POST">
+                <div class="form-group row"><label class="col-2 col-form-label">Name of new
+                    catalog:</label>
+                    <div class="col-10  mb-4">
+                        <input name="name" type="text" class="form-control w-25" />
+                        <input type="hidden" name="id" value="${fileModel.id}">
+                    </div>
+                </div>
+                <a class="btn btn-secondary " style="height:40px; width:100px"
+                   href="${pageContext.request.contextPath}/demo">Back</a>
+                <input class="btn btn-secondary ml-3" type="submit" value="Approve" style="height:40px; width:100px">
+                <div class="col mb-2 px-0">
+                    <c:if test="${success != null}">
+                    <div class="alert alert-success text-white px-5 mt-5 mb-0" role="alert">
+                        <div class="container">
+                            <i class="now-ui-icons ui-2_like lg pull-left mr-3"></i>
+                            <strong>SUCCESS!</strong>
+                            <span> ${success}</span>
+                            <button type="button" class="close text-white" data-dismiss="alert">
+                                <i class="now-ui-icons ui-1_simple-remove"></i>
+                            </button>
+                        </div>
+                    </div>
+                    </c:if>
+                    <c:if test="${error != null}">
+                    <div class="alert alert-danger text-white px-5" role="alert">
+                        <div class="container">
+                            <i class="now-ui-icons objects_support-17 lg pull-left mr-3"></i>
+                            <strong>ERROR!</strong>
+                            <span> ${error}</span>
+                            <button type="button" class="close text-white" data-dismiss="alert">
+                                <i class="now-ui-icons ui-1_simple-remove"></i>
+                            </button>
+                        </div>
+                    </div>
+                    </c:if>
+                </div>
+            </form:form>
         </div>
     </div>
 </div>
 
 
-<div class="py-5">
-    <div class="container" style="min-height: 1000px">
-        <div class="row table-responsive">
-            <table class="table table-hover table-dark rounded">
-                <thead class="thead-dark">
-                <tr class="text-center">
-                    <th class="text-center rounded border-0">Name</th>
-                    <th class="text-center rounded border-0">Type</th>
-                    <th class="text-center rounded border-0">Size</th>
-                    <th class="text-center rounded border-0">Action</th>
-                </tr>
-                </thead>
-                <tbody class="text-center">
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>
-                        <form action="${pageContext.request.contextPath}/back" method="get" class="m-0">
-                            <button type="submit" title="Back to previous folder" class="btn btn-info"
-                                    style="width:193px!important">
-                                <i class="fa fa-arrow-left fa-lg" aria-hidden="true"></i></button>
-                        </form>
-                    </td>
-                </tr>
-                <c:forEach var="file" items="${files}">
-                    <tr>
-                        <td>${file.name}</td>
-                        <td>${file.type}</td>
-                        <td>${file.size}</td>
-                        <td>
-                            <c:choose>
-                                <c:when test="${file.type=='DIRECTORY'}">
-                                    <form action="${pageContext.request.contextPath}/directory" method="post">
-                                        <button type="submit" title="Go to directory" class="btn btn-info"
-                                                formmethod="post" name="name"
-                                                value="${file.name}" style="width:60px!important">
-                                            <i class="fa fa-sign-in fa-lg" aria-hidden="true"></i></button>
-                                        <a href="${pageContext.request.contextPath}/delete-directory/${file.id}"
-                                           title="Delete directory"
-                                           onclick="if (!(confirm('Are you sure you want to delete this directory?'))) return false"
-                                           class="btn btn-danger" style="width:60px!important">
-                                            <i class="fa fa-trash fa-lg" aria-hidden="true"></i></a>
-                                        <a href="${pageContext.request.contextPath}/rename-file?id=${file.id}"
-                                           title="Edit directory"
-                                           class="btn btn-warning" style="width:60px!important">
-                                            <i class="fa fa-pencil-square fa-lg" aria-hidden="true"></i>
-                                        </a>
-                                    </form>
-                                </c:when>
-                                <c:otherwise>
-                                    <form action="${pageContext.request.contextPath}/file" method="post">
-                                        <button type="submit" title="Download file" class="btn btn-info"
-                                                style="width:60px!important"
-                                                formmethod="post" name="name" value="${file.name}"
-                                                onclick="if (!(confirm('Are you sure you want to download this file?'))) return false">
-                                            <i class="fa fa-download fa-lg" aria-hidden="true"></i></button>
-                                        <a href="${pageContext.request.contextPath}/delete-file/${file.id}"
-                                           title="Delete file"
-                                           onclick="if (!(confirm('Are you sure you want to delete this file?'))) return false"
-                                           class="btn btn-danger" style="width:60px!important">
-                                            <i class="fa fa-trash fa-lg" aria-hidden="true"></i></a>
-                                        <a href="${pageContext.request.contextPath}/rename-file?id=${file.id}"
-                                           title="Edit file"
-                                           class="btn btn-warning" style="width:60px!important">
-                                            <i class="fa fa-pencil-square fa-lg" aria-hidden="true"></i>
-                                        </a>
-                                    </form>
-                                </c:otherwise>
-                            </c:choose>
-                        </td>
-                    </tr>
-                </c:forEach>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
 <footer class="py-5 bg-dark text-muted">
     <div class="container">
         <p class="float-right">
