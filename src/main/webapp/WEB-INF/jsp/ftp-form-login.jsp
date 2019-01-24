@@ -56,7 +56,7 @@
                                     on LinkedIn</a>
                             </li>
                             <li>
-                                <a href="mailto:info@coffecode.org" target="_top" class="text-secondary">Email me</a>
+                                <a href="mailto:info@coffeecoding.net" target="_top" class="text-secondary">Email me</a>
                             </li>
                         </ul>
                     </div>
@@ -67,7 +67,7 @@
 
         <div class="navbar sticky-top navbar-dark bg-info">
             <div class="container d-flex justify-content-between">
-                <a href="https://www.coffecode.org/" class="navbar-brand d-flex align-items-center"><i
+                <a href="https://www.coffeecoding.net/" class="navbar-brand d-flex align-items-center"><i
                         class="fa fa-home fa-2x lead fa-fw d-inline-block" aria-hidden="true"></i>&nbsp;&nbsp;<text
                         class="">
                     HOME
