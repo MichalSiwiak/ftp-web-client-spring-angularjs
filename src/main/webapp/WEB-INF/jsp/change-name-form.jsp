@@ -8,7 +8,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>coffecode.org</title>
+    <title>coffeecoding.net</title>
     <meta name="description"
           content="Free open source projects present different java solutions using spring, hibernate and other popular frameworks.">
     <meta name="keywords"
@@ -19,10 +19,9 @@
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.standalone.min.css">
     <link rel="stylesheet" href="resources/css/now-ui-kit.css" type="text/css">
+    <link rel="stylesheet" href="resources/css/style.css" type="text/css">
     <link rel="icon" href="resources/img/favicon.png">
     <!-- PAGE scripts -->
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
-    <script src="resources/js/functions.js"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
             integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
             crossorigin="anonymous"></script>
@@ -33,34 +32,13 @@
             integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
             crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.js"></script>
-    <style>
-        html, body {
-            height: 100%;
-        }
-
-        #wrap {
-            min-height: 100%;
-        }
-
-        #main {
-            overflow: auto;
-            padding-bottom: 150px; /* this needs to be bigger than footer height*/
-        }
-
-        .footer {
-            position: relative;
-            margin-top: -150px; /* negative value of footer height */
-            height: 150px;
-            clear: both;
-            padding-top: 20px;
-            background-color: black;
-        }
-
-    </style>
 </head>
-<body ng-app="FtpManagement" ng-controller="FtpManagementController" class="bg-light text-dark" style="">
+
+<body class="bg-light text-dark">
 <div id="wrap">
     <div id="main" class="clear-top">
+
+
         <div class="collapse" id="navbarHeader">
             <div class="container">
                 <div class="row">
@@ -157,16 +135,16 @@
 
 
         <div class="py-5">
-            <div class="container" style="min-height: 750px">
+            <div class="container">
                 <div class="row">
                     <div class="order-md-1 w-25 col-md-12" style="">
-                        <h2 class="w-100 text-left mb-5 mt-5">Creating new directory ...</h2>
+                        <h2 class="w-100 text-left mb-5 mt-5">Changing name of ${fileModel.name}</h2>
                         <form:form modelAttribute="fileModel" action="${pageContext.request.contextPath}/rename-file"
                                    method="POST">
                             <div class="form-group row"><label class="col-2 col-form-label">Name of new
                                 catalog:</label>
                                 <div class="col-10  mb-4">
-                                    <input name="name" type="text" class="form-control w-25"/>
+                                    <input name="name" type="text" required="true" class="form-control w-25"/>
                                     <input type="hidden" name="id" value="${fileModel.id}">
                                 </div>
                             </div>
@@ -188,7 +166,7 @@
                                     </div>
                                 </c:if>
                                 <c:if test="${error != null}">
-                                    <div class="alert alert-danger text-white px-5" role="alert">
+                                    <div class="alert alert-danger text-white px-5 mt-5 mb-0" role="alert">
                                         <div class="container">
                                             <i class="now-ui-icons objects_support-17 lg pull-left mr-3"></i>
                                             <strong>ERROR!</strong>
@@ -205,6 +183,8 @@
                 </div>
             </div>
         </div>
+
+
     </div>
 </div>
 
@@ -214,8 +194,8 @@
         <p class="float-right">
             <a href="#">Back to top</a>
         </p>
-        <p>© Copyright 2018 coffecode.org - All rights reserved.<br>Contact: info@coffecode.org<br>02-619 Warsaw<br><a
-                href="https://www.coffecode.org/">Visit the homepage</a>
+        <p>© Copyright 2018 coffeecoding.net - All rights reserved.<br>Contact: info@coffeecoding.net<br>Warsaw PL<br><a
+                href="https://www.coffeecoding.net/">Visit the homepage</a>
         </p>
     </div>
 </footer>

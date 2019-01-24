@@ -208,7 +208,7 @@ public class FtpController {
             InputStream inputStream = new FileInputStream(file);
 
             if (ftpClient.storeFile(multipartFile.getOriginalFilename(), inputStream)) {
-                model.addAttribute("success", "File uploaded successfully.");
+                model.addAttribute("success", "File " + multipartFile.getOriginalFilename() + " uploaded successfully.");
             } else {
                 model.addAttribute("error", "Unknown error.");
             }
