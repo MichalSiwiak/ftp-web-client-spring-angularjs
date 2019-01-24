@@ -94,10 +94,7 @@
         <div class="row justify-content-center">
             <div class="col-md-0">
                 <h1 class="text-left text-primary">FTP CLIENT</h1>
-                <p class="lead text-left">Lorem Ipsum jest tekstem stosowanym jako przykładowy wypełniacz w przemyśle
-                    poligraficznym. Został po raz pierwszy użyty w XV w. przez nieznanego drukarza do wypełnienia
-                    tekstem próbnej książki. Pięć wieków później zaczął być używany przemyśle elektronicznym, pozostając
-                    praktycznie niezmienionym. </p>
+                <p class="lead text-left">Implementation of basic FTP client functionality using spring mvc and apache commons net.</p>
             </div>
         </div>
     </div>
@@ -149,7 +146,7 @@
 
 
 <div class="py-5">
-    <div class="container" style="min-height: 1000px">
+    <div class="container" style="min-height: 550px">
         <div class="row table-responsive">
             <table class="table table-hover table-dark rounded">
                 <thead class="thead-dark">
