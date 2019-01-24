@@ -117,7 +117,7 @@
 
         <div class="py-5">
             <div class="container">
-                <h2 class="text-center">Project Description</h2>
+                <h2>Project Description</h2>
 
 
             </div>
