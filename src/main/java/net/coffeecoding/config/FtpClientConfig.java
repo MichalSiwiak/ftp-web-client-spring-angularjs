@@ -26,7 +26,9 @@ public class FtpClientConfig implements WebMvcConfigurer {
 
         FTPClient ftpClient = new FTPClient();
 
-        try {
+
+
+      /*  try {
             logger.info("ftp.server=" + env.getProperty("ftp.server"));
             logger.info("ftp.port=" + env.getProperty("ftp.port"));
             ftpClient.connect(env.getProperty("ftp.server"), Integer.parseInt(env.getProperty("ftp.port")));
@@ -37,7 +39,7 @@ public class FtpClientConfig implements WebMvcConfigurer {
 
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
 
         return ftpClient;
     }
