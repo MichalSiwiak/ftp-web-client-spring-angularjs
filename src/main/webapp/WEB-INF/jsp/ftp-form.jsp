@@ -161,9 +161,35 @@
         </div>
 
 
-        <div class="py-5">
+        <div class="py-3">
             <div class="container">
-                <div class="row table-responsive">
+                <div class="col px-0 mb-3">
+                    <c:if test="${param.success != null}">
+                        <div class="alert alert-success text-white px-5" role="alert">
+                            <div class="container">
+                                <i class="now-ui-icons ui-2_like lg pull-left mr-3"></i>
+                                <strong>SUCCESS!</strong>
+                                <span> ${param.success}</span>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        </div>
+                    </c:if>
+                    <c:if test="${param.error != null}">
+                        <div class="alert alert-danger text-white px-5 mt-0 mb-0" role="alert" style="">
+                            <div class="container">
+                                <i class="now-ui-icons objects_support-17 lg pull-left mr-3"></i>
+                                <strong>ERROR!</strong>
+                                <span> ${param.error}</span>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        </div>
+                    </c:if>
+                </div>
+                <div class="row table-responsive w-100 m-0">
                     <table class="table table-hover table-dark rounded">
                         <thead class="thead-dark">
                         <tr class="text-center">

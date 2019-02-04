@@ -158,15 +158,15 @@
                            href="${pageContext.request.contextPath}/demo">Back</a>
                         <input class="btn btn-secondary ml-3" type="submit" value="Approve"
                                style="height:40px; width:100px">
-                        <div class="col mb-2 px-0">
+                        <div class="col mb-2 px-0 pb-5" >
                             <c:if test="${success != null}">
                                 <div class="alert alert-success text-white px-5 mt-5 mb-0" role="alert">
                                     <div class="container">
                                         <i class="now-ui-icons ui-2_like lg pull-left mr-3"></i>
                                         <strong>SUCCESS!</strong>
                                         <span> ${success}</span>
-                                        <button type="button" class="close text-white" data-dismiss="alert">
-                                            <i class="now-ui-icons ui-1_simple-remove"></i>
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
                                 </div>
@@ -177,8 +177,8 @@
                                         <i class="now-ui-icons objects_support-17 lg pull-left mr-3"></i>
                                         <strong>ERROR!</strong>
                                         <span> ${error}</span>
-                                        <button type="submit" class="close text-white" data-dismiss="alert">
-                                            <i class="now-ui-icons ui-1_simple-remove"></i>
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
                                 </div>

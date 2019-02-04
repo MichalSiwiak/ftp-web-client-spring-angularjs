@@ -158,8 +158,8 @@
                                         <i class="now-ui-icons ui-2_like lg pull-left mr-3"></i>
                                         <strong>SUCCESS!</strong>
                                         <span> ${success}</span>
-                                        <button type="button" class="close text-white" data-dismiss="alert">
-                                            <i class="now-ui-icons ui-1_simple-remove"></i>
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
                                 </div>
@@ -170,8 +170,8 @@
                                         <i class="now-ui-icons objects_support-17 lg pull-left mr-3"></i>
                                         <strong>ERROR!</strong>
                                         <span> ${error}</span>
-                                        <button type="button" class="close text-white" data-dismiss="alert">
-                                            <i class="now-ui-icons ui-1_simple-remove"></i>
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
                                 </div>
