@@ -58,7 +58,7 @@ public class FtpController {
             ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
             this.serverName = serverName;
         } catch (IOException e) {
-            model.addAttribute("error", "Unable to connect to the server - unknown host!");
+            model.addAttribute("error", "Unknown host - name or service not known");
             return "ftp-form-login";
         }
 
