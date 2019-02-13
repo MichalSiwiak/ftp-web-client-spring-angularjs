@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.apache.commons.net.ftp.FTPClient;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ import java.util.List;
 public class FtpController {
 
     @Autowired
-    private FTPClient ftpClient;
+    private Client client;
     private String serverName;
     private List<FileModel> fileModels;
 
@@ -49,7 +50,7 @@ public class FtpController {
                             Model model) {
 
         FTPClient ftpClient = new FTPClient();
-        boolean login = false;
+        boolean login;
 
         try {
             ftpClient.connect(serverName, Integer.parseInt(portNumber));
@@ -62,8 +63,10 @@ public class FtpController {
             return "ftp-form-login";
         }
 
+
+
         if (login != false) {
-            this.ftpClient = ftpClient;
+            this.client.setFtpClient(ftpClient);
             return "redirect:/demo";
         } else {
             model.addAttribute("error", "Unable to connect to the server - invalid username or password!");
@@ -74,11 +77,11 @@ public class FtpController {
     @GetMapping("/demo")
     public String getAllFiles(Model model) {
 
-        if (ftpClient.isConnected()) {
+        if (client.getFtpClient() != null) {
 
             List<FTPFile> ftpFiles = null;
             try {
-                ftpFiles = Arrays.asList(ftpClient.listFiles());
+                ftpFiles = Arrays.asList(client.getFtpClient().listFiles());
             } catch (IOException e) {
             }
             List<FileModel> ftpFileClients = new ArrayList<>();
@@ -114,44 +117,56 @@ public class FtpController {
     }
 
     @PostMapping("/file")
-    public ResponseEntity<InputStreamResource> downloadFile(@RequestParam("name") String fileName) {
-
+    public ResponseEntity<InputStreamResource> downloadFile(@RequestParam("name") String fileName, HttpServletResponse response) {
         String remoteFile = null;
         File downloadFile = null;
         InputStreamResource resource = null;
+        if (client.getFtpClient() != null) {
+            try {
+                remoteFile = client.getFtpClient().printWorkingDirectory() + "/" + fileName;
+                downloadFile = new File("tmp/" + fileName);
+                OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(downloadFile));
+                client.getFtpClient().retrieveFile(remoteFile, outputStream);
+                outputStream.close();
+                resource = new InputStreamResource(new FileInputStream(downloadFile));
+            } catch (IOException e) {
+            }
+            downloadFile.delete();
+            return ResponseEntity.ok()
 
-        try {
-            remoteFile = ftpClient.printWorkingDirectory() + "/" + fileName;
-            downloadFile = new File("tmp/" + fileName);
-            OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(downloadFile));
-            ftpClient.retrieveFile(remoteFile, outputStream);
-            outputStream.close();
-            resource = new InputStreamResource(new FileInputStream(downloadFile));
-        } catch (IOException e) {
+                    .header(HttpHeaders.CONTENT_DISPOSITION,
+                            "attachment;filename=" + fileName)
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    /*.contentLength(remoteFile.length())*/
+                    .body(resource);
+        } else {
+            String message = "The session has expired.<a href='https://www.coffeecoding.net/ftp/login'><br>Log-in again</a>";
+            InputStream inputStream = new ByteArrayInputStream(message.getBytes());
+            InputStreamResource inputStreamResource = new InputStreamResource(inputStream);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.TEXT_HTML)
+                    .body(inputStreamResource);
         }
-        downloadFile.delete();
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION,
-                        "attachment;filename=" + fileName)
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                /*.contentLength(remoteFile.length())*/
-                .body(resource);
     }
 
     @PostMapping("/directory")
     public String changeWorkingDirectory(@RequestParam("name") String name) {
-        try {
-            this.ftpClient.changeWorkingDirectory(name);
-        } catch (IOException e) {
+        if (client.getFtpClient() != null) {
+            try {
+                this.client.getFtpClient().changeWorkingDirectory(name);
+            } catch (IOException e) {
+            }
+            return "redirect:/demo";
+        } else {
+            return "redirect:/login";
         }
-        return "redirect:/demo";
     }
 
     @GetMapping("/back")
     public String changeToParentDirectory() {
-        if (ftpClient.isConnected()) {
+        if (client.getFtpClient() != null) {
             try {
-                this.ftpClient.changeToParentDirectory();
+                this.client.getFtpClient().changeToParentDirectory();
             } catch (IOException e) {
             }
             return "redirect:/demo";
@@ -162,7 +177,7 @@ public class FtpController {
 
     @GetMapping("/new-file")
     public String newFileGET(Model model) {
-        if (ftpClient.isConnected()) {
+        if (client.getFtpClient() != null) {
             FileModel ftpFileClient = new FileModel();
             model.addAttribute("ftpFileClient", ftpFileClient);
             return "new-file-form";
@@ -175,33 +190,37 @@ public class FtpController {
     public String newFilePOST(@RequestParam("fileName") String fileName,
                               @RequestParam("fileContent") String fileContent,
                               Model model) {
-        File firstLocalFile;
-        try {
-            firstLocalFile = new File("tmp/" + fileName + ".txt");
-            BufferedWriter writer = new BufferedWriter(new FileWriter(firstLocalFile));
-            writer.write(fileContent);
-            writer.close();
+        if (client.getFtpClient() != null) {
+            File firstLocalFile;
+            try {
+                firstLocalFile = new File("tmp/" + fileName + ".txt");
+                BufferedWriter writer = new BufferedWriter(new FileWriter(firstLocalFile));
+                writer.write(fileContent);
+                writer.close();
 
-            String firstRemoteFile = firstLocalFile.getName();
-            InputStream inputStream = new FileInputStream(firstLocalFile);
+                String firstRemoteFile = firstLocalFile.getName();
+                InputStream inputStream = new FileInputStream(firstLocalFile);
 
-            if (ftpClient.storeFile(firstRemoteFile, inputStream)) {
-                model.addAttribute("success", "File created successfully.");
-            } else {
+                if (client.getFtpClient().storeFile(firstRemoteFile, inputStream)) {
+                    model.addAttribute("success", "File created successfully.");
+                } else {
+                    model.addAttribute("error", "Cannot send a file to this directory - permission denied.");
+                }
+                inputStream.close();
+            } catch (IOException e) {
                 model.addAttribute("error", "Cannot send a file to this directory - permission denied.");
+                return "new-file-form";
             }
-            inputStream.close();
-        } catch (IOException e) {
-            model.addAttribute("error", "Cannot send a file to this directory - permission denied.");
+            firstLocalFile.delete();
             return "new-file-form";
+        } else {
+            return "redirect:/login";
         }
-        firstLocalFile.delete();
-        return "new-file-form";
     }
 
     @GetMapping("/new-directory")
     public String newDirectoryGET() {
-        if (ftpClient.isConnected()) {
+        if (client.getFtpClient() != null) {
             return "new-directory-form";
         } else {
             return "redirect:/login";
@@ -211,27 +230,30 @@ public class FtpController {
     @PostMapping("/new-directory")
     public String newDirectoryPOST(@RequestParam("dirName") String dirName, Model model) {
 
+        if (client.getFtpClient() != null) {
+            String dirToCreate = null;
+            boolean success = false;
+            try {
+                dirToCreate = client.getFtpClient().printWorkingDirectory() + "/" + dirName;
+                success = client.getFtpClient().makeDirectory(dirToCreate);
+            } catch (IOException e) {
+                return "new-directory-form";
+            }
 
-        String dirToCreate = null;
-        boolean success = false;
-        try {
-            dirToCreate = ftpClient.printWorkingDirectory() + "/" + dirName;
-            success = ftpClient.makeDirectory(dirToCreate);
-        } catch (IOException e) {
+            if (success) {
+                model.addAttribute("success", "Successfully created directory: " + dirToCreate);
+            } else {
+                model.addAttribute("error", "Failed to create directory. Server's reply: " + showFTPServerResponse(client.getFtpClient()));
+            }
             return "new-directory-form";
-        }
-        System.out.println();
-        if (success) {
-            model.addAttribute("success", "Successfully created directory: " + dirToCreate);
         } else {
-            model.addAttribute("error", "Failed to create directory. Server's reply: " + showFTPServerResponse(ftpClient));
+            return "redirect:/login";
         }
-        return "new-directory-form";
     }
 
     @GetMapping("/send-file")
     public String sendFileGET() {
-        if (ftpClient.isConnected()) {
+        if (client.getFtpClient() != null) {
             return "send-file-form";
         } else {
             return "redirect:/login";
@@ -241,41 +263,45 @@ public class FtpController {
     @PostMapping("/send-file")
     public String sendFilePOST(@RequestParam("file") MultipartFile multipartFile, Model model) {
         File file = null;
-        try {
-            if (multipartFile.getOriginalFilename().isEmpty()) {
-                model.addAttribute("error", "Please select a valid file!");
-            } else if (multipartFile.getSize() > 15728640) {
-                model.addAttribute("error", "File can not be larger than 15 MB!");
-            } else {
-                file = new File("tmp/" + multipartFile.getOriginalFilename());
-                multipartFile.transferTo(file);
-                InputStream inputStream = new FileInputStream(file);
-
-                if (ftpClient.storeFile(multipartFile.getOriginalFilename(), inputStream)) {
-                    model.addAttribute("success", "File " + multipartFile.getOriginalFilename() + " uploaded successfully.");
+        if (client.getFtpClient() != null) {
+            try {
+                if (multipartFile.getOriginalFilename().isEmpty()) {
+                    model.addAttribute("error", "Please select a valid file!");
+                } else if (multipartFile.getSize() > 15728640) {
+                    model.addAttribute("error", "File can not be larger than 15 MB!");
                 } else {
-                    model.addAttribute("error", "Cannot send a file to this directory - permission denied.");
-                }
+                    file = new File("tmp/" + multipartFile.getOriginalFilename());
+                    multipartFile.transferTo(file);
+                    InputStream inputStream = new FileInputStream(file);
 
-                inputStream.close();
+                    if (client.getFtpClient().storeFile(multipartFile.getOriginalFilename(), inputStream)) {
+                        model.addAttribute("success", "File " + multipartFile.getOriginalFilename() + " uploaded successfully.");
+                    } else {
+                        model.addAttribute("error", "Cannot send a file to this directory - permission denied.");
+                    }
+
+                    inputStream.close();
+                }
+            } catch (IOException e) {
+                return "send-file-form";
             }
-        } catch (IOException e) {
+            file.delete();
             return "send-file-form";
+        } else {
+            return "redirect:/login";
         }
-        file.delete();
-        return "send-file-form";
     }
 
 
     @GetMapping("/delete-file/{id}")
     public String deleteFile(@PathVariable String id, Model model) {
 
-        if (ftpClient.isConnected()) {
+        if (client.getFtpClient() != null) {
             String fileName = fileModels.get(Integer.parseInt(id)).getName();
             boolean delete = false;
 
             try {
-                delete = ftpClient.deleteFile(ftpClient.printWorkingDirectory() + "/" + fileName);
+                delete = client.getFtpClient().deleteFile(client.getFtpClient().printWorkingDirectory() + "/" + fileName);
             } catch (IOException e) {
                 model.addAttribute("error", "Failed to remove: " + fileName + ".");
             }
@@ -284,22 +310,22 @@ public class FtpController {
             } else {
                 model.addAttribute("error", "Failed to remove: " + fileName + ".");
             }
+
+
+            return "redirect:/demo";
         } else {
             return "redirect:/login";
         }
-
-
-        return "redirect:/demo";
     }
 
     @GetMapping("/delete-directory/{id}")
     public String deleteDirectory(@PathVariable String id, Model model) {
 
 
-        if (ftpClient.isConnected()) {
+        if (client.getFtpClient() != null) {
 
             String fileName = fileModels.get(Integer.parseInt(id)).getName();
-            boolean removed = removeDirectory(ftpClient, fileName, "");
+            boolean removed = removeDirectory(client.getFtpClient(), fileName, "");
             if (removed) {
                 model.addAttribute("success", fileName + " was successfully deleted");
             } else {
@@ -369,7 +395,7 @@ public class FtpController {
     @GetMapping("/rename-file")
     public String renameFileGET(@RequestParam("id") String id, Model model) {
 
-        if (ftpClient.isConnected()) {
+        if (client.getFtpClient() != null) {
             FileModel fileModel = fileModels.get(Integer.parseInt(id));
             model.addAttribute("fileModel", fileModel);
 
@@ -383,43 +409,50 @@ public class FtpController {
     public String renameFilePOST(@RequestParam("id") String id,
                                  @RequestParam("name") String name,
                                  Model model) {
+        if (client.getFtpClient() != null) {
+            String newDir = name;
+            String oldDir = fileModels.get(Integer.parseInt(id)).getName();
+            String extension = FilenameUtils.getExtension(oldDir);
+            boolean rename;
 
-        String newDir = name;
-        String oldDir = fileModels.get(Integer.parseInt(id)).getName();
-        String extension = FilenameUtils.getExtension(oldDir);
-        boolean rename;
-
-        try {
-            if (fileModels.get(Integer.parseInt(id)).getType().equals("DIRECTORY")) {
-                rename = ftpClient.rename(oldDir, newDir);
-            } else {
-                rename = ftpClient.rename(oldDir, newDir + "." + extension);
+            try {
+                if (fileModels.get(Integer.parseInt(id)).getType().equals("DIRECTORY")) {
+                    rename = client.getFtpClient().rename(oldDir, newDir);
+                } else {
+                    rename = client.getFtpClient().rename(oldDir, newDir + "." + extension);
+                }
+            } catch (IOException e) {
+                return "redirect:/demo";
             }
-        } catch (IOException e) {
+
+            if (rename) {
+                model.addAttribute("success", oldDir + " was successfully renamed to: " + newDir + ".");
+            } else {
+                model.addAttribute("error", "Failed to rename: " + oldDir + ".");
+            }
+
+
             return "redirect:/demo";
-        }
-
-        if (rename) {
-            model.addAttribute("success", oldDir + " was successfully renamed to: " + newDir + ".");
         } else {
-            model.addAttribute("error", "Failed to rename: " + oldDir + ".");
+            return "redirect:/login";
         }
-
-
-        return "redirect:/demo";
     }
 
 
     @GetMapping("/logout")
     public String logout(Model model) {
-        try {
-            ftpClient.logout();
-            ftpClient.disconnect();
-        } catch (IOException e) {
+        if (client.getFtpClient() != null) {
+            try {
+                client.getFtpClient().logout();
+                client.getFtpClient().disconnect();
+            } catch (IOException e) {
+                return "ftp-form-login";
+            }
+            model.addAttribute("logout", "You have been logged out.");
             return "ftp-form-login";
+        } else {
+            return "redirect:/login";
         }
-        model.addAttribute("logout", "You have been logged out.");
-        return "ftp-form-login";
     }
 
 
