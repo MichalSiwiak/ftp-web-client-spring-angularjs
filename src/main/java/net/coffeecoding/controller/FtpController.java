@@ -64,7 +64,6 @@ public class FtpController {
         }
 
 
-
         if (login != false) {
             this.client.setFtpClient(ftpClient);
             return "redirect:/demo";
@@ -77,7 +76,7 @@ public class FtpController {
     @GetMapping("/demo")
     public String getAllFiles(Model model) {
 
-        if (client.getFtpClient() != null) {
+        if (client.getFtpClient() != null && client.getFtpClient().isConnected()) {
 
             List<FTPFile> ftpFiles = null;
             try {
@@ -121,7 +120,7 @@ public class FtpController {
         String remoteFile = null;
         File downloadFile = null;
         InputStreamResource resource = null;
-        if (client.getFtpClient() != null) {
+        if (client.getFtpClient() != null && client.getFtpClient().isConnected()) {
             try {
                 remoteFile = client.getFtpClient().printWorkingDirectory() + "/" + fileName;
                 downloadFile = new File("tmp/" + fileName);
@@ -151,7 +150,7 @@ public class FtpController {
 
     @PostMapping("/directory")
     public String changeWorkingDirectory(@RequestParam("name") String name) {
-        if (client.getFtpClient() != null) {
+        if (client.getFtpClient() != null && client.getFtpClient().isConnected()) {
             try {
                 this.client.getFtpClient().changeWorkingDirectory(name);
             } catch (IOException e) {
@@ -164,7 +163,7 @@ public class FtpController {
 
     @GetMapping("/back")
     public String changeToParentDirectory() {
-        if (client.getFtpClient() != null) {
+        if (client.getFtpClient() != null && client.getFtpClient().isConnected()) {
             try {
                 this.client.getFtpClient().changeToParentDirectory();
             } catch (IOException e) {
@@ -177,7 +176,7 @@ public class FtpController {
 
     @GetMapping("/new-file")
     public String newFileGET(Model model) {
-        if (client.getFtpClient() != null) {
+        if (client.getFtpClient() != null && client.getFtpClient().isConnected()) {
             FileModel ftpFileClient = new FileModel();
             model.addAttribute("ftpFileClient", ftpFileClient);
             return "new-file-form";
@@ -190,7 +189,7 @@ public class FtpController {
     public String newFilePOST(@RequestParam("fileName") String fileName,
                               @RequestParam("fileContent") String fileContent,
                               Model model) {
-        if (client.getFtpClient() != null) {
+        if (client.getFtpClient() != null && client.getFtpClient().isConnected()) {
             File firstLocalFile;
             try {
                 firstLocalFile = new File("tmp/" + fileName + ".txt");
@@ -220,7 +219,7 @@ public class FtpController {
 
     @GetMapping("/new-directory")
     public String newDirectoryGET() {
-        if (client.getFtpClient() != null) {
+        if (client.getFtpClient() != null && client.getFtpClient().isConnected()) {
             return "new-directory-form";
         } else {
             return "redirect:/login";
@@ -230,7 +229,7 @@ public class FtpController {
     @PostMapping("/new-directory")
     public String newDirectoryPOST(@RequestParam("dirName") String dirName, Model model) {
 
-        if (client.getFtpClient() != null) {
+        if (client.getFtpClient() != null && client.getFtpClient().isConnected()) {
             String dirToCreate = null;
             boolean success = false;
             try {
@@ -253,7 +252,7 @@ public class FtpController {
 
     @GetMapping("/send-file")
     public String sendFileGET() {
-        if (client.getFtpClient() != null) {
+        if (client.getFtpClient() != null && client.getFtpClient().isConnected()) {
             return "send-file-form";
         } else {
             return "redirect:/login";
@@ -263,7 +262,7 @@ public class FtpController {
     @PostMapping("/send-file")
     public String sendFilePOST(@RequestParam("file") MultipartFile multipartFile, Model model) {
         File file = null;
-        if (client.getFtpClient() != null) {
+        if (client.getFtpClient() != null && client.getFtpClient().isConnected()) {
             try {
                 if (multipartFile.getOriginalFilename().isEmpty()) {
                     model.addAttribute("error", "Please select a valid file!");
@@ -296,7 +295,7 @@ public class FtpController {
     @GetMapping("/delete-file/{id}")
     public String deleteFile(@PathVariable String id, Model model) {
 
-        if (client.getFtpClient() != null) {
+        if (client.getFtpClient() != null && client.getFtpClient().isConnected()) {
             String fileName = fileModels.get(Integer.parseInt(id)).getName();
             boolean delete = false;
 
@@ -322,7 +321,7 @@ public class FtpController {
     public String deleteDirectory(@PathVariable String id, Model model) {
 
 
-        if (client.getFtpClient() != null) {
+        if (client.getFtpClient() != null && client.getFtpClient().isConnected()) {
 
             String fileName = fileModels.get(Integer.parseInt(id)).getName();
             boolean removed = removeDirectory(client.getFtpClient(), fileName, "");
@@ -395,7 +394,7 @@ public class FtpController {
     @GetMapping("/rename-file")
     public String renameFileGET(@RequestParam("id") String id, Model model) {
 
-        if (client.getFtpClient() != null) {
+        if (client.getFtpClient() != null && client.getFtpClient().isConnected()) {
             FileModel fileModel = fileModels.get(Integer.parseInt(id));
             model.addAttribute("fileModel", fileModel);
 
@@ -405,11 +404,11 @@ public class FtpController {
         }
     }
 
-    @PostMapping("/rename-file") //zrobić inaczej bez parametru - pobrać starą nazwe z listy po id
+    @PostMapping("/rename-file")
     public String renameFilePOST(@RequestParam("id") String id,
                                  @RequestParam("name") String name,
                                  Model model) {
-        if (client.getFtpClient() != null) {
+        if (client.getFtpClient() != null && client.getFtpClient().isConnected()) {
             String newDir = name;
             String oldDir = fileModels.get(Integer.parseInt(id)).getName();
             String extension = FilenameUtils.getExtension(oldDir);
@@ -441,7 +440,7 @@ public class FtpController {
 
     @GetMapping("/logout")
     public String logout(Model model) {
-        if (client.getFtpClient() != null) {
+        if (client.getFtpClient() != null && client.getFtpClient().isConnected()) {
             try {
                 client.getFtpClient().logout();
                 client.getFtpClient().disconnect();

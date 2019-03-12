@@ -111,6 +111,8 @@
                         <h1 class="text-left text-primary">FTP CLIENT</h1>
                         <p class="lead text-left">Implementation of basic FTP client functionality using spring mvc and
                             apache commons net.</p>
+                        <p class="lead text-left"><b>For testing: server=mkwk018.cba.pl username=ftpwebclient password=Test789 port=21</b> or enter another server.</p>
+                        <p class="lead text-left"><b>The application does not save sensitive user data!</b></p>
                     </div>
                 </div>
             </div>
